@@ -38,8 +38,7 @@ $rosa_branca_recipes = array_fill( 0, 3, $rosa_branca_recipe_card );
 				data-variant="peek"
 				data-arrows="true"
 				data-dots="true"
-				data-dots-target="[data-carousel-dots='recipes']"
-				data-arrows-target="[data-carousel-arrows='recipes']"
+				data-controls-target="[data-carousel-controls='recipes']"
 				data-gap="50"
 				data-label="<?php esc_attr_e( 'Receitas em destaque', 'rosa-branca' ); ?>"
 			>
@@ -65,17 +64,20 @@ $rosa_branca_recipes = array_fill( 0, 3, $rosa_branca_recipe_card );
 					</article>
 				<?php endforeach; ?>
 			</div>
+			<!-- Carousel.jsx portals arrows before dots into this shared target
+			     (see Carousel.jsx) — natural row order puts arrows at the
+			     media's outer edge (the bleeding side, left here) and dots at
+			     its inner edge (nearest the text column, right); mirrored
+			     from Products, which reverses the row instead. -->
+			<div class="carousel__controls" data-carousel-controls="recipes">
+				<div class="carousel__arrows-placeholder" aria-hidden="true"></div>
+			</div>
 		</div>
 
 		<div class="home-section__content">
 			<h2 class="home-section__title"><?php esc_html_e( 'Lorem ipsum dolor sit amet', 'rosa-branca' ); ?></h2>
 			<p class="home-section__text"><?php esc_html_e( 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse ut massa neque. Etiam egestas magna sit amet elit accumsan tristique in ut nunc. Sed porta, ex eget ornare facilisis, dui libero bibendum enim, vitae sodales turpis ex vel nisi. Phasellus felis odio, egestas sed elit in, finibus dapibus dui. Integer purus nunc, hendrerit eu odio nec, bibendum fringilla erat. Quisque condimentum lectus nec hendrerit ullamcorper. Proin vestibulum eros sit amet diam feugiat rhoncus.', 'rosa-branca' ); ?></p>
 			<a class="btn btn--red" href="<?php echo esc_url( home_url( '/receitas/' ) ); ?>"><?php esc_html_e( 'lorem ipsum', 'rosa-branca' ); ?></a>
-			<div class="home-section__controls">
-				<div class="carousel__dots" data-carousel-dots="recipes"></div>
-				<div class="carousel__arrows" data-carousel-arrows="recipes"></div>
-				<div class="carousel__arrows-placeholder" aria-hidden="true"></div>
-			</div>
 		</div>
 	</div>
 </section>

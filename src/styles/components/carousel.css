@@ -3,14 +3,15 @@
    viewport/track layout (overflow-hidden + flex) as well as sizing slides
    and styling our own custom arrows/dots.
 
-   For the "peek" variant (recipes/products), both dots AND arrows are
-   portaled into the text column instead of rendering next to the media
-   (see Carousel.jsx) — per explicit visual QA they sit together, right
-   under the CTA button, not split across two columns with a big gap
-   between them. Their layout rules (the row wrapping them) live with
-   .home-section__content, not here (see home-sections.css). Only the
-   hero's own absolutely-positioned dots (no separate text column to
-   portal into, and no arrows at all) are styled below. */
+   For the "peek" variant (recipes/products), dots AND arrows are both
+   portaled into one shared row (.carousel__controls below) directly under
+   the media — per real Figma coordinates (node 2:6, Figma MCP): arrows sit
+   at that row's outer/bleeding edge, dots at its inner edge (nearest the
+   text column). See Carousel.jsx/mount-carousel.jsx for the portal
+   mechanics, and home-sections.css for the bleed-right row reversal that
+   mirrors this for Products. Only the hero's own absolutely-positioned
+   dots (no arrows at all, no controls row to portal into) are styled
+   below. */
 
 .carousel {
   position: relative;
@@ -35,14 +36,28 @@
   gap: 16px;
 }
 
+/* Shared row dots + arrows both portal into (recipes.php/products.php:
+   .carousel__controls, a sibling of the carousel mount div inside
+   .home-section__media) — 80px tall to match the arrows, 20px below the
+   media per Figma. space-between + a lone child (the placeholder, or later
+   just the arrows) naturally lands that child at the row's start edge —
+   left in normal flow, right once .home-section--bleed-right reverses it
+   (home-sections.css) — which is exactly where arrows belong in both
+   cases, with no need to special-case the placeholder itself. */
+.carousel__controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 80px;
+  margin-top: 20px;
+}
+
 /* Reserves the exact box .carousel__arrows occupies (2 × 80px arrows + 16px
-   gap) before the Carousel island mounts, as a flex sibling of the dots
-   target in .home-section__controls (home-sections.css) — see arrowsTarget
-   in mount-carousel.jsx/Carousel.jsx. Without this, the React mount swaps a
-   narrower static row for a wider one after first paint — a real, measured
-   layout shift (Lighthouse: recipes/products sections, CLS ~0.34 on mobile)
-   since the SSR fallback has no arrows at all. Removed by mount-carousel.jsx
-   once the real arrows render. */
+   gap) before the Carousel island mounts. Without this, the React mount
+   swaps a narrower static row for a wider one after first paint — a real,
+   measured layout shift (Lighthouse: recipes/products sections, CLS ~0.34
+   on mobile) since the SSR fallback has no arrows at all. Removed by
+   mount-carousel.jsx once the real arrows render. */
 .carousel__arrows-placeholder {
   width: 176px;
   height: 80px;

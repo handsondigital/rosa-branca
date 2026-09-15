@@ -19,13 +19,15 @@ import arrowRightSvg from "../../../assets/icons/carousel-arrow-right.svg?raw";
  * match fractional-visible-items scenarios), so none of that class of bug
  * applies, and it also ships ~10x lighter (headless, no bundled CSS).
  *
- * Per explicit visual QA, the dots AND arrows for the "peek" sections
- * (recipes/products) both sit in the *text* column, right under the CTA
- * button, next to each other — not under the media, where there isn't a
- * fixed control row to anchor them to consistently. `dotsTarget`/
- * `arrowsTarget` (real DOM nodes rendered by PHP in the text column, found
- * by mount-carousel.jsx) are where portals render them, so one Embla
- * instance still drives controls physically separate from the media.
+ * Per Figma (confirmed via Figma MCP, not guessed from a screenshot — see
+ * git history for an earlier wrong attempt that put them in the text
+ * column), the dots AND arrows for the "peek" sections (recipes/products)
+ * both sit in one row directly under the media, not the text column:
+ * arrows at the row's outer/bleeding edge, dots at its inner edge (nearest
+ * the text column). `dotsTarget`/`arrowsTarget` (in practice the same DOM
+ * node — see mount-carousel.jsx) are where portals render them, so one
+ * Embla instance still drives controls physically separate from the
+ * slides themselves.
  *
  * Progressive enhancement: `slidesHtml` is the real server-rendered markup
  * captured from the DOM before React mounted (see home.js), so the exact

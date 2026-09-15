@@ -72,7 +72,6 @@
 
 .home-section--bleed-left .home-section__content {
   flex: 1 1 280px;
-  min-width: 360px;
   max-width: 380px;
 }
 
@@ -105,21 +104,20 @@
 
 .home-section--bleed-right .home-section__content {
   flex: 1 1 280px;
-  min-width: 360px;
   max-width: 380px;
 }
 
-/* Without a min-width, content can flex-shrink well below what
-   .home-section__controls (dots + arrows side by side, ~360px) needs —
-   confirmed live around the 1024–1300px range, where it shrinks to
-   ~210px and the row would wrap/overflow. 360px leaves it just under its
-   own 380px max-width, so media (already tolerant of shrinking — it's a
-   carousel clipped by overflow:hidden) absorbs the rest of the squeeze
-   instead. Declared once here since both bleed variants share the same
-   controls row and the same failure mode. */
-
 .home-section--bleed-right .home-section__row {
   padding-left: max(var(--container-padding), calc((100% - 1240px) / 2));
+}
+
+/* Products' controls row (carousel.css: .carousel__controls, shared by both
+   sections) mirrors Recipes': Carousel.jsx always portals arrows before
+   dots, so reversing the row here — instead of duplicating layout logic in
+   JS — is what puts dots at the media's inner edge (nearest the text
+   column, left) and arrows at its outer edge (right), matching Figma. */
+.home-section--bleed-right .carousel__controls {
+  flex-direction: row-reverse;
 }
 
 .home-section__title {
@@ -132,16 +130,6 @@
   color: var(--color-gray-600);
   line-height: 28px;
   margin-bottom: 24px;
-}
-
-/* Wraps the Carousel's portaled dots + arrows — per explicit visual QA both
-   sit together in the text column, under the CTA button, not split across
-   the row with the media (see Carousel.jsx's dotsTarget/arrowsTarget). */
-.home-section__controls {
-  display: flex;
-  align-items: center;
-  gap: 30px;
-  margin-top: 30px;
 }
 
 /*
