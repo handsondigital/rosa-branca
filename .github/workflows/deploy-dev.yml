@@ -1,7 +1,12 @@
 # Builds the theme (Vite/React assets + font/image pipelines) and rsyncs it
-# over SSH to the DEV server (https://devrosabranca.handson-ti.com/) on every
-# push to main. Also runnable by hand from the Actions tab
-# (workflow_dispatch), e.g. to redeploy without a new commit.
+# over SSH to the DEV server (https://devrosabranca.handson-ti.com/).
+#
+# The push trigger is DISABLED for now (see `on:` below) — DEPLOY_SSH_KEY
+# and friends aren't set yet (still waiting on infra), so every push was
+# failing at the SSH step and piling up red "development" deployments in
+# the repo's Deployments tab, one per commit. Manual-only
+# (workflow_dispatch, from the Actions tab) until those secrets exist —
+# re-enable the `push:` block below once they do.
 #
 # devrosabranca.handson-ti.com sits behind Cloudflare (confirmed via
 # response headers: Server: cloudflare) — Cloudflare only proxies HTTP(S),
@@ -34,8 +39,8 @@
 name: Deploy theme (dev)
 
 on:
-  push:
-    branches: [main]
+  # push:
+  #   branches: [main]
   workflow_dispatch:
 
 jobs:
