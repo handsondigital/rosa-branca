@@ -64,6 +64,21 @@
   max-width: 100%;
 }
 
+/* Stacked layout (<=1023px, same breakpoint as the full-width fix below):
+   unlike the Recipes/Products/About buttons, the hero one does NOT go
+   full-width on the real Figma mobile frame (node 79:511) — it stays a
+   deliberate fixed 299px there (out of 378px available in that column),
+   not a percentage. No dedicated tablet frame exists to check 768-1023px
+   against, so 299px carries through that whole range too, same reasoning
+   as every other "no Figma tablet frame" value already documented in this
+   codebase (tokens.css). max-width:100% (above) still guards narrower
+   devices where even 299px wouldn't fit. */
+@media (max-width: 1023px) {
+  .home-hero__content .btn {
+    width: 299px;
+  }
+}
+
 .home-section__content .btn--red {
   width: 270px;
   max-width: 100%;
