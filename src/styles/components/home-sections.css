@@ -132,6 +132,31 @@
   flex-direction: row-reverse;
 }
 
+/* Per explicit request/Figma check: the dots should sit centered on the
+   CTA button, not wherever the row's independent media/content-column
+   centering happens to land them — the two columns are unrelated boxes
+   centered against each other's total height (.home-section--bleed
+   .home-section__row above), so nothing already ties one column's
+   sub-element to the other's. Only meaningful side-by-side (>=1024px —
+   below that the columns stack, so "aligned with the button" isn't a
+   real relationship to begin with).
+   44px (base 20px, carousel.css, +24) — NOT the +12px the raw measured
+   gap suggests: media is the taller column, so growing it by any amount N
+   also grows the row's own height by N, and the row's align-items:center
+   then re-centers the *shorter* column (content, holding the button)
+   within that taller row — shifting content/button down by N/2 as a side
+   effect. Net closure per 1px added here is only 0.5px (the dots move the
+   full amount, the button chases half of it), so reaching the measured
+   12px gap needs 24px added, not 12 — confirmed live (12px landed at
+   -6px, not 0; 24px landed exactly at 0). Recipes is NOT touched here
+   (its media is tall enough that the same two centers sit ~72px apart, a
+   different problem this fix doesn't address). */
+@media (min-width: 1024px) {
+  .home-section--bleed-right .carousel__controls {
+    margin-top: 44px;
+  }
+}
+
 /* Desktop only (>=1024px, where media actually bleeds past the viewport
    edge — below that the row's own padding-inline, in the stacked-layout
    media query further down, already insets both arrows and text equally,
