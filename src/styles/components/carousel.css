@@ -135,27 +135,48 @@
    point. Desktop only — mobile's single-full-width-slide view (@media
    below) has no "peek" concept to offset.
    Tuned (not an exact half-card split) to push the cut on the 1st card as
-   far as it'll go without also erasing the 3rd card's — at the 1440px
-   reference viewport the media column is 895px against 1240px of card
-   content (3×380 + 2×50 gap: the text column's own fixed 380px width,
-   above, leaves media only 1325-50(gap)-380=895px, not the 1010px
-   flex-basis it asks for), so -345px is the exact shift that would put
-   the 3rd card fully flush with zero cut. It can't actually be set that
-   high, though: past around -343px (confirmed by testing every value
-   from -320 to -345 live) Embla's own scroll-bounds detection breaks —
-   canScrollNext/dots read as if there's nothing left to scroll, because
-   the margin has shifted the DOM far enough that Embla's measurement of
-   "how much is already visible" no longer distinguishes it from "fully
-   scrolled." -330px keeps a real margin below that cliff (not the
-   knife's-edge -342px that still barely works) since the exact breaking
-   point isn't guaranteed stable across browsers/devicePixelRatios — the
-   3rd card still shows a small (~15px) cut as the trade-off. If a wider
-   media column at some other viewport ever needs this recomputed, redo
-   the same live binary search rather than trusting the arithmetic alone —
-   the -345px "exact" arithmetic answer is provably unsafe to actually use. */
+   far as it'll go without also erasing the 3rd card's, at the 1440px
+   reference viewport specifically — see the responsive formula below for
+   why it can't just stay a flat number for every viewport.
+
+   -330px alone (this rule's previous version) was exactly right at 1440px
+   but wrong everywhere wider: .home-section__media (home-sections.css)
+   keeps bleeding/growing via flex-grow as the viewport widens, while the
+   3 cards' combined width (1240px = 3×380 + 2×50 gap) is fixed — past
+   ~1729px-ish media alone already exceeds 1240px, so ANY fixed left-shift
+   pushes the visible window past the real content entirely, opening a
+   growing gap of plain background between the cards and the text column
+   (reported live at 1920px). Adding more (invented) cards to fill that
+   gap was considered and rejected — recipes.php already documents why
+   fabricating cards the Figma source doesn't have was reverted once.
+
+   Fixed instead by making the shift responsive, clamped between two
+   already-validated bounds:
+   - -330px floor: never shift more than the empirically-safe amount from
+     the plain--330px version above (Embla's own scroll-bounds detection
+     silently breaks past ~-343px — confirmed by testing every value from
+     -320 to -345 live; see git history for that full derivation).
+   - 0px ceiling: never shift backwards/positive once the media column
+     alone grows wider than the 1240px of card content (~2100px+
+     viewport) — past that point there's nothing left to peek, cards just
+     render at their natural size with trailing empty space, which is a
+     content-runs-out problem no offset can paper over, not this one.
+   Between those bounds, the shift shrinks as the viewport (and hence
+   media's width) grows, keeping the visible window's right edge
+   pinned at the 3rd card's real right edge (zero gap) instead of
+   overshooting it. Derivation: media's width is (100vw - gutter - 430px)
+   — 430 = the 50px row gap + the text column's fixed 380px
+   (home-sections.css) — so the shift that exactly closes the gap is
+   1240 - that, i.e. (1670px + gutter - 100vw); --container-gutter-vw
+   (tokens.css) is used instead of --container-gutter here specifically
+   because this rule sits deep enough in nested layout that a %-based
+   value would resolve against the wrong containing block (see that
+   token's own comment). Verified at 1440px (unchanged from the flat
+   -330px version), 1920px (gap closed, confirmed live), and both
+   directions of Embla navigation still work at each. */
 @media (min-width: 1024px) {
   .home-section--bleed-left .carousel--peek .carousel__track {
-    margin-left: -330px;
+    margin-left: clamp(-330px, calc(100vw - var(--container-gutter-vw) - 1670px), 0px);
   }
 }
 

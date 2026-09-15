@@ -99,6 +99,16 @@
   --container-width: 1240px;
   --container-inline-size: min(var(--container-width), calc(100% - (var(--container-padding) * 2)));
   --container-gutter: max(var(--container-padding), calc((100% - var(--container-width)) / 2));
+
+  /* vw-based twin of --container-gutter, for the rare case (carousel.css's
+     Recipes peek-offset) where the consumer sits deep enough in nested
+     flex/carousel layout that --container-gutter's `%` term would resolve
+     against that element's own (much narrower) containing block instead
+     of the actual viewport — % in a CSS custom property isn't "frozen" to
+     wherever the property is defined, it's re-evaluated fresh at each
+     var() use site against THAT site's own containing block. 100vw has no
+     such ambiguity: it always means the real viewport width, everywhere. */
+  --container-gutter-vw: max(var(--container-padding), calc((100vw - var(--container-width)) / 2));
 }
 
 /* Mobile type scale (matches the dedicated Figma mobile frames, not a naive scale-down) */
