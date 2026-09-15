@@ -1,5 +1,8 @@
+/* 80px, not a rounder-looking 100 — matches the gap Figma actually shows
+   between the banner (ends y=768) and the form/details row (starts
+   y=848), the same 80px rhythm used between every section on Home. */
 .contact-section {
-  padding-block: 100px;
+  padding-block: 80px;
 }
 
 .contact-section__grid {

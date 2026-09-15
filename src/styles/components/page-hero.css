@@ -39,6 +39,20 @@
   max-width: 496px;
 }
 
+/* Desktop (>=1024px): content is bottom-anchored 100px above the hero's
+   own bottom edge per Figma (node 631:6917 — content block ends at y=668
+   within a 768px-tall banner: 768-668=100), not vertically centered — the
+   same class of fix as .home-hero__content (home-hero.css), which cited
+   the same Figma-metadata-over-centering reasoning. Since the hero's own
+   height is fixed regardless of viewport width, this padding-bottom holds
+   the same visual gap at any desktop width, not just the 1440 reference. */
+@media (min-width: 1024px) {
+  .page-hero__content {
+    justify-content: flex-end;
+    padding-bottom: 100px;
+  }
+}
+
 .page-hero__title {
   font-size: var(--text-h2);
   text-transform: uppercase;
