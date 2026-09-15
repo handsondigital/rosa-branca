@@ -67,14 +67,9 @@
   --shadow-card: 0px 0px 15px rgb(0 0 0 / 16%);
   --shadow-photo: 0px 0px 7.5px rgb(0 0 0 / 16%);
 
-  /*
-   * Fonts: MADE Tommy Soft (body) is a commercial font — Nunito Sans is used
-   * as a temporary substitute (rounded humanist sans, close in spirit) until
-   * the licensed font files are provided and self-hosted in assets/fonts.
-   * Swap --font-body's value below once that happens; nothing else changes.
-   */
+  /* Fonts (self-hosted @font-face declarations in fonts.css) */
   --font-heading: "Montserrat", "Helvetica Neue", arial, sans-serif;
-  --font-body: "Nunito Sans", "Helvetica Neue", arial, sans-serif;
+  --font-body: "MADE Tommy Soft", "Helvetica Neue", arial, sans-serif;
   --font-premium: "Fraunces", georgia, serif;
 
   /* Type scale — desktop (real px used on Home / Fale Conosco) */

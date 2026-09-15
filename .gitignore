@@ -4,6 +4,7 @@
 node_modules/
 dist/
 assets/images/generated/
+assets/fonts/generated/
 
 # Local tooling output
 reports/

@@ -1,21 +1,28 @@
 /*
- * Self-hosted @font-face declarations for the two fonts actually referenced
- * by --font-heading (Montserrat) and --font-body (Nunito Sans, the Made
- * Tommy Soft placeholder — see tokens.css) in tokens.css.
- *
- * Until now those were only ever *named* in font-family stacks with no
- * source at all — no Google Fonts <link>, no @font-face, no local files —
- * so every screen this theme has ever rendered actually fell straight
- * through to the fallback (Helvetica Neue/Arial), never the real typeface.
+ * Self-hosted @font-face declarations for the two fonts referenced by
+ * --font-heading (Montserrat) and --font-body (MADE Tommy Soft) in
+ * tokens.css.
  *
  * Self-hosted (not a Google Fonts <link>) per ARCHITECTURE_PLAN.md §8: one
  * fewer cross-origin connection, and these files ride the same cached,
  * versioned dist/ pipeline as everything else. Only the weights actually
- * used in the CSS are included (base.css: 700 for h1-h4; several
- * components: 500 for both families) — see the font-weight audit that
- * motivated this file. Subset to latin + latin-ext (covers every Portuguese
+ * used in the CSS are included — see scripts/lint-fonts.mjs, which fails
+ * the build if this file and actual CSS usage ever drift apart.
+ *
+ * Montserrat: subset to latin + latin-ext (covers every Portuguese
  * diacritic — ã, ç, é, etc. all sit in U+0000-00FF); cyrillic/vietnamese
  * variants Google also ships were dropped, they'd never match pt-BR copy.
+ *
+ * MADE Tommy Soft: licensed directly from the client (Rosa Branca), self-
+ * hosted from assets/fonts/raw/*.otf via `npm run build:fonts` (see
+ * scripts/convert-fonts.mjs) into assets/fonts/generated/*.woff2. Shipped
+ * as a single file per weight (not latin/latin-ext split — the source OTF
+ * isn't pre-subset by Google, so there's nothing to split). Only 400 and
+ * 500 are declared: the only two weights --font-body is ever used at
+ * today (base.css, button.css, input.css = 400; home-hero.css = 500). The
+ * other weights the client sent (100/300/700/800/900, plus outline
+ * variants) sit converted in assets/fonts/generated/ but aren't declared
+ * here — add a @font-face only when a design actually calls for one.
  */
 
 @font-face {
@@ -59,41 +66,17 @@
 }
 
 @font-face {
-  font-family: "Nunito Sans";
+  font-family: "MADE Tommy Soft";
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: url("../../assets/fonts/nunito-sans-400-latin.woff2") format("woff2");
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329,
-    U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+  src: url("../../assets/fonts/generated/made-tommy-soft-400.woff2") format("woff2");
 }
 
 @font-face {
-  font-family: "Nunito Sans";
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-  src: url("../../assets/fonts/nunito-sans-400-latin-ext.woff2") format("woff2");
-  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329,
-    U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
-}
-
-@font-face {
-  font-family: "Nunito Sans";
+  font-family: "MADE Tommy Soft";
   font-style: normal;
   font-weight: 500;
   font-display: swap;
-  src: url("../../assets/fonts/nunito-sans-500-latin.woff2") format("woff2");
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329,
-    U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
-}
-
-@font-face {
-  font-family: "Nunito Sans";
-  font-style: normal;
-  font-weight: 500;
-  font-display: swap;
-  src: url("../../assets/fonts/nunito-sans-500-latin-ext.woff2") format("woff2");
-  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329,
-    U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+  src: url("../../assets/fonts/generated/made-tommy-soft-500.woff2") format("woff2");
 }
