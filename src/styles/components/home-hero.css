@@ -2,13 +2,9 @@
   position: relative;
 }
 
-.home-hero__slide {
-  position: relative;
-  height: 768px;
-  max-height: 90vh;
-}
-
-/* No-JS / pre-mount fallback: unlike the recipes/products carousels (whose
+/* .home-hero__slide itself gets its position/height/max-height from
+   .hero-shell (hero-shell.css), applied alongside it in hero.php.
+   No-JS / pre-mount fallback: unlike the recipes/products carousels (whose
    raw children already form a same-height horizontal row via
    display:flex — see home-sections.css), the hero has 5 duplicated
    full-height slides with no such constraint, so before Carousel.jsx
@@ -19,22 +15,12 @@
    slide. Hiding the non-first slides upfront makes the SSR fallback's
    height match the mounted carousel's from the very first paint; React's
    mount replaces this whole container anyway; so this rule never
-   conflicts with the real (all-slides-present) Embla markup. Declared
-   after the plain .home-hero__slide rule above (not before) so source
-   order and cascade specificity both agree, even though this compound
-   selector would win regardless — keeps the stylesheet's read order
-   matching how the cascade actually resolves it. */
+   conflicts with the real (all-slides-present) Embla markup. */
 .home-hero__carousel .home-hero__slide:not(:first-child) {
   display: none;
 }
 
-.home-hero__image {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
+/* .home-hero__image itself is styled by .hero-shell__image (hero-shell.css). */
 
 .home-hero__slide::before {
   content: "";
@@ -43,22 +29,13 @@
   background: linear-gradient(90deg, rgb(255 255 255 / 88%) 0%, rgb(255 255 255 / 55%) 45%, rgb(255 255 255 / 0%) 70%);
 }
 
-/* Same min() formula as .container / .site-header (base.css) — keeps the
-   hero text aligned with the header at every viewport width. */
-.home-hero__container {
-  position: relative;
-  height: 100%;
-  max-width: min(1240px, calc(100% - (var(--container-padding) * 2)));
-  margin-inline: auto;
-}
-
+/* .home-hero__container/.home-hero__content are styled by
+   .hero-shell__container/.hero-shell__content (hero-shell.css) — only the
+   properties unique to this hero (the content gap; the desktop vertical
+   anchor below) live here. */
 .home-hero__content {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
   justify-content: center;
   gap: 24px;
-  max-width: 496px;
 }
 
 /* Desktop (>=1024px, where .site-header shows its full pill nav — see
@@ -103,15 +80,10 @@
   align-self: flex-start;
 }
 
+/* .home-hero__slide height and .home-hero__content max-width at this
+   breakpoint come from .hero-shell (hero-shell.css) — only the
+   home-specific gradient flip lives here. */
 @media (max-width: 767px) {
-  .home-hero__slide {
-    height: 630px;
-  }
-
-  .home-hero__content {
-    max-width: 100%;
-  }
-
   .home-hero__slide::before {
     background: linear-gradient(180deg, rgb(255 255 255 / 90%) 0%, rgb(255 255 255 / 75%) 55%, rgb(255 255 255 / 15%) 100%);
   }

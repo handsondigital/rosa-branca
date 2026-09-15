@@ -39,12 +39,12 @@
  * "Sobre a Marca" uses the plain centered .home-section__grid above (photo/
  * text both sit inside the 100px gutter).
  *
- * The text-column gutter below reuses .container's own formula
- * (max(--container-padding, (100% - 1240px) / 2), not a flat
- * var(--container-padding)) — a flat padding only matches .container's real
- * edge by coincidence at one viewport width and drifts apart above/below it,
- * the exact bug .container's own min()-based formula was written to kill
- * (see base.css). Applied as a single-side padding here (not the centered
+ * The text-column gutter below reuses .container's own formula, as
+ * --container-gutter (tokens.css) — not a flat var(--container-padding),
+ * which only matches .container's real edge by coincidence at one
+ * viewport width and drifts apart above/below it, the exact bug
+ * .container's own min()-based formula was written to kill (see base.css).
+ * Applied as a single-side padding here (not the centered
  * max-width+margin:auto .container uses) since only one edge of this row
  * needs to land on the container line — the other bleeds to the true
  * viewport edge.
@@ -76,7 +76,7 @@
 }
 
 .home-section--bleed-left .home-section__row {
-  padding-right: max(var(--container-padding), calc((100% - 1240px) / 2));
+  padding-right: var(--container-gutter);
 }
 
 /*
@@ -108,7 +108,7 @@
 }
 
 .home-section--bleed-right .home-section__row {
-  padding-left: max(var(--container-padding), calc((100% - 1240px) / 2));
+  padding-left: var(--container-gutter);
 }
 
 /* Products' controls row (carousel.css: .carousel__controls, shared by both

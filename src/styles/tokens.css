@@ -84,6 +84,21 @@
   --text-nav: 18px;
   --container-max: 1440px;
   --container-padding: 100px;
+
+  /* The capped-content-column math (1240px, never closer than
+     --container-padding to either edge) used to be typed out in full in
+     base.css/header.css/footer.css/home-hero.css/page-hero.css — same
+     formula, 5 copies, no shared source (see base.css's own comment on
+     .container for why the naive max-width+padding split it replaced
+     didn't work). --container-inline-size is that formula as a single
+     reusable value; --container-gutter is its single-side-padding
+     equivalent (home-sections.css's bleed rows use only one edge of the
+     capped column, not a centered max-width). scripts/lint-css-dedupe.mjs
+     (npm run lint:css-dedupe) fails the build if a long value like this
+     ever gets copy-pasted again instead of reusing the token. */
+  --container-width: 1240px;
+  --container-inline-size: min(var(--container-width), calc(100% - (var(--container-padding) * 2)));
+  --container-gutter: max(var(--container-padding), calc((100% - var(--container-width)) / 2));
 }
 
 /* Mobile type scale (matches the dedicated Figma mobile frames, not a naive scale-down) */

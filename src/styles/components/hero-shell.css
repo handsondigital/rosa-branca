@@ -1,0 +1,69 @@
+/*
+ * Shared "static full-bleed hero" shell — the positioning mechanics (full-
+ * bleed image, height/viewport cap, centered+capped text container, flex
+ * content column) were identical between the Home hero (home-hero.css,
+ * which layers the carousel + its own typography on top) and inner-page
+ * heroes like Fale Conosco (page-hero.css), just typed out twice. Composed
+ * via an extra class alongside each component's own BEM classes — see
+ * template-parts/home/hero.php and template-parts/fale-conosco/hero.php.
+ *
+ * What stays OUT of here on purpose: typography (title/text font, size,
+ * color — genuinely different per hero), the gradient scrim's exact stops
+ * (also different per hero), .content's `gap` and desktop vertical anchor
+ * (each hero's own Figma-verified value), and .page-hero's overflow:hidden
+ * (home-hero doesn't need it — Embla's own .carousel__viewport already
+ * clips it — so it isn't shared behavior, just a page-hero-specific
+ * addition living in page-hero.css).
+ */
+
+.hero-shell {
+  position: relative;
+  height: 768px;
+  max-height: 90vh;
+}
+
+.hero-shell__image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* --container-inline-size (tokens.css): same formula as .container
+   (base.css) — keeps hero text aligned with the header at every viewport
+   width, not just one reference width. */
+.hero-shell__container {
+  position: relative;
+  height: 100%;
+  max-width: var(--container-inline-size);
+  margin-inline: auto;
+}
+
+/* justify-content is deliberately NOT here even though both heroes start
+   at the same "center" value — each one overrides it in its own file at
+   the desktop breakpoint, and that override needs to reliably beat this
+   shared rule. Same class, same specificity, so whichever stylesheet's
+   <link> happens to load second wins — and that's NOT source/import order:
+   Vite's own manifest lists this shared chunk after each entry's own CSS
+   regardless of import order in home.js/fale-conosco.js (confirmed in
+   dist/.vite/manifest.json), so relying on cascade order across these two
+   files for an overridden property is fragile by construction. Keeping
+   justify-content per-file (home-hero.css/page-hero.css) sidesteps the
+   problem entirely instead of fighting specificity for it. */
+.hero-shell__content {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  max-width: 496px;
+}
+
+@media (max-width: 767px) {
+  .hero-shell {
+    height: 630px;
+  }
+
+  .hero-shell__content {
+    max-width: 100%;
+  }
+}

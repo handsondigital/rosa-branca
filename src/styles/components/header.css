@@ -4,9 +4,10 @@
   left: 0;
   right: 0;
 
-  /* Same min() formula as .container (base.css) — keeps the header aligned
-     with every other capped section at all viewport widths, not just 1440px. */
-  max-width: min(1240px, calc(100% - (var(--container-padding) * 2)));
+  /* --container-inline-size (tokens.css): same formula as .container
+     (base.css) — keeps the header aligned with every other capped section
+     at all viewport widths, not just 1440px. */
+  max-width: var(--container-inline-size);
   margin-inline: auto;
   z-index: 40;
 }

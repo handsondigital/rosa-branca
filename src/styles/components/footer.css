@@ -4,16 +4,17 @@
   padding-block: 50px;
 }
 
-/* Same min() formula as .container / .site-header (base.css) — a fixed
-   padding on .site-footer + a separate max-width on the grid (the previous
-   approach) only matched the header at ≥1440px viewport; below that the
-   grid was narrower than the header instead of aligning with it. */
+/* --container-inline-size (tokens.css): same formula as .container /
+   .site-header — a fixed padding on .site-footer + a separate max-width on
+   the grid (the previous approach) only matched the header at ≥1440px
+   viewport; below that the grid was narrower than the header instead of
+   aligning with it. */
 .site-footer__grid {
   display: flex;
   flex-wrap: wrap;
   align-items: flex-end;
   gap: 37px;
-  max-width: min(1240px, calc(100% - (var(--container-padding) * 2)));
+  max-width: var(--container-inline-size);
   margin-inline: auto;
 }
 

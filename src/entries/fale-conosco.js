@@ -1,3 +1,4 @@
+import "../styles/components/hero-shell.css";
 import "../styles/components/page-hero.css";
 import "../styles/contact.css";
 

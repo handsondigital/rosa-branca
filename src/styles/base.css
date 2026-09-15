@@ -83,12 +83,13 @@ h4 {
  * — below that (e.g. 1280–1440px) they diverge, which is how the header
  * and hero text ended up misaligned. min() unifies them into one formula:
  * cap at 1240px, but never come closer than --container-padding to either
- * edge. Reused verbatim by .site-header / hero containers / footer grid so
- * everything that should align with the header actually does, at every
- * viewport width, not just the 1440px reference.
+ * edge. --container-inline-size (tokens.css) is this exact formula, reused
+ * by .site-header / hero containers / footer grid so everything that
+ * should align with the header actually does, at every viewport width, not
+ * just the 1440px reference.
  */
 .container {
-  max-width: min(1240px, calc(100% - (var(--container-padding) * 2)));
+  max-width: var(--container-inline-size);
   margin-inline: auto;
 }
 

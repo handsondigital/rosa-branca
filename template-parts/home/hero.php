@@ -39,20 +39,20 @@ $rosa_branca_hero_slides = array_fill( 0, 5, $rosa_branca_hero_slide );
 	>
 		<?php foreach ( $rosa_branca_hero_slides as $index => $slide ) : ?>
 			<?php $is_first = 0 === $index; ?>
-			<div class="home-hero__slide">
+			<div class="home-hero__slide hero-shell">
 				<?php
 				rosa_branca_picture(
 					$slide['image'],
 					array(
-						'img_class'     => 'home-hero__image',
+						'img_class'     => 'home-hero__image hero-shell__image',
 						'alt'           => '',
 						'loading'       => $is_first ? 'eager' : 'lazy',
 						'fetchpriority' => $is_first ? 'high' : '',
 					)
 				);
 				?>
-				<div class="home-hero__container">
-					<div class="home-hero__content">
+				<div class="home-hero__container hero-shell__container">
+					<div class="home-hero__content hero-shell__content">
 						<?php
 						// Only one <h1> per page: the first slide gets the real
 						// heading tag, the rest (duplicate placeholder copy) use a
