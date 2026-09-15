@@ -15,6 +15,8 @@ require get_theme_file_path( 'inc/theme-setup.php' );
 require get_theme_file_path( 'inc/assets.php' );
 require get_theme_file_path( 'inc/icons.php' );
 require get_theme_file_path( 'inc/images.php' );
+require get_theme_file_path( 'inc/post-types.php' );
+require get_theme_file_path( 'inc/uploads.php' );
 
 // NOTE: o formulário de Fale Conosco está implementado apenas no front-end
 // por ora (ver template-parts/fale-conosco/form.php). O handler de envio

@@ -120,6 +120,76 @@ function rosa_branca_picture( string $name, array $args = array() ): void {
 }
 
 /**
+ * Same <picture> (AVIF -> WebP -> fallback) output as rosa_branca_picture()
+ * above, but for a real media-library attachment (e.g. a `receita`/`produto`
+ * Featured Image) instead of a build-time static asset — reads the `sources`
+ * metadata inc/uploads.php's wp_generate_attachment_metadata hook writes,
+ * rather than assets/images/generated/manifest.json. Single resolution (no
+ * 1x/2x srcset) for now, matching how far the static pipeline's own per-card
+ * contexts are decided — add a second registered size (e.g. a `-2x` variant
+ * of receita-card/produto-card in inc/post-types.php) if/when real content
+ * makes that worth it.
+ *
+ * $args: same keys as rosa_branca_picture() (alt/class/img_class/loading/fetchpriority).
+ */
+function rosa_branca_dynamic_picture( int $attachment_id, string $size, array $args = array() ): void {
+	$image_src = wp_get_attachment_image_src( $attachment_id, $size );
+	$metadata  = wp_get_attachment_metadata( $attachment_id );
+
+	if ( ! $image_src || ! $metadata ) {
+		return;
+	}
+
+	$args = wp_parse_args(
+		$args,
+		array(
+			'alt'           => '',
+			'class'         => '',
+			'img_class'     => '',
+			'loading'       => 'lazy',
+			'fetchpriority' => '',
+		)
+	);
+
+	$sources = ( 'full' === $size || empty( $metadata['sizes'][ $size ]['sources'] ) )
+		? ( $metadata['sources'] ?? array() )
+		: $metadata['sizes'][ $size ]['sources'];
+
+	if ( ! empty( $sources ) ) {
+		$upload_dir = wp_get_upload_dir();
+		$base_url   = trailingslashit( $upload_dir['baseurl'] ) . trailingslashit( dirname( $metadata['file'] ) );
+
+		printf( '<picture%s>', $args['class'] ? ' class="' . esc_attr( $args['class'] ) . '"' : '' );
+
+		foreach ( array( 'image/avif', 'image/webp' ) as $mime ) {
+			if ( empty( $sources[ $mime ] ) ) {
+				continue;
+			}
+			printf(
+				'<source type="%s" srcset="%s">',
+				esc_attr( $mime ),
+				esc_url( $base_url . $sources[ $mime ]['file'] )
+			);
+		}
+	} else {
+		printf( '<picture%s>', $args['class'] ? ' class="' . esc_attr( $args['class'] ) . '"' : '' );
+	}
+
+	printf(
+		'<img src="%s" width="%d" height="%d" alt="%s" loading="%s"%s%s>',
+		esc_url( $image_src[0] ),
+		(int) $image_src[1],
+		(int) $image_src[2],
+		esc_attr( $args['alt'] ),
+		esc_attr( $args['loading'] ),
+		$args['fetchpriority'] ? ' fetchpriority="' . esc_attr( $args['fetchpriority'] ) . '"' : '',
+		$args['img_class'] ? ' class="' . esc_attr( $args['img_class'] ) . '"' : ''
+	);
+
+	echo '</picture>';
+}
+
+/**
  * Prints a <link rel=preload> for the single best candidate (largest AVIF
  * variant) of a page's real LCP image — pair with fetchpriority="high" +
  * loading="eager" on the matching rosa_branca_picture() call.
