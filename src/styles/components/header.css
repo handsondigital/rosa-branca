@@ -111,6 +111,23 @@
   width: 22px;
   height: 2px;
   background: var(--color-brand-blue);
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+/* Hamburger -> X morph, driven entirely by the aria-expanded state
+   mobile-menu.js already sets — no extra JS/class needed. 7px = the 2px
+   bar height + the 5px gap between them (.mobile-menu__toggle above), i.e.
+   the distance from the top/bottom bar to the middle bar's position. */
+.mobile-menu__toggle[aria-expanded="true"] span:nth-child(1) {
+  transform: translateY(7px) rotate(45deg);
+}
+
+.mobile-menu__toggle[aria-expanded="true"] span:nth-child(2) {
+  opacity: 0;
+}
+
+.mobile-menu__toggle[aria-expanded="true"] span:nth-child(3) {
+  transform: translateY(-7px) rotate(-45deg);
 }
 
 .mobile-menu {
@@ -122,10 +139,33 @@
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-photo);
   overflow: hidden;
+  transform-origin: top center;
+
+  /* Opacity + transform only (never height/max-height) — both are
+     compositor-only properties the browser can animate without triggering
+     layout/paint on every frame, which is what keeps this feeling light on
+     actual mobile hardware instead of janky. mobile-menu.js toggles
+     .is-open a frame after clearing [hidden] (see its comment) so this
+     actually transitions instead of snapping straight to the open state. */
+  opacity: 0;
+  transform: translateY(-8px) scale(0.98);
+  transition: opacity 0.18s ease-out, transform 0.18s ease-out;
 }
 
 .mobile-menu[hidden] {
   display: none;
+}
+
+.mobile-menu.is-open {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mobile-menu__toggle span,
+  .mobile-menu {
+    transition: none;
+  }
 }
 
 .mobile-menu__link {
