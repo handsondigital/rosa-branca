@@ -1,25 +1,39 @@
-/* [data-reveal] sections fade + rise in as they enter the viewport
-   (scroll-reveal.js). The hidden state only exists under .has-scroll-reveal
-   — a class the JS module adds to <html> itself on mount — so without JS
-   (or with prefers-reduced-motion/no IntersectionObserver support, where
-   the module returns early and never adds the class) every section stays
-   at its plain, fully-visible default below. This is the same
-   progressive-enhancement shape as .mobile-menu/.main-menu__search-form
-   (header.css): the "hidden" visual state is applied by JS, never baked
-   into the element's own default CSS. */
-[data-reveal] {
+/* Fade + rise in on scroll (scroll-reveal.js). The hidden state only exists
+   under .has-scroll-reveal — a class the JS module adds to <html> itself on
+   mount — so without JS (or with prefers-reduced-motion/no
+   IntersectionObserver support, where the module returns early and never
+   adds the class) everything stays at its plain, fully-visible default
+   below. Same progressive-enhancement shape as .mobile-menu/.main-menu__
+   search-form (header.css): the "hidden" visual state is applied by JS,
+   never baked into the element's own default CSS.
+
+   Two shapes (see scroll-reveal.js's own comment for why):
+   - [data-reveal]: the element itself fades (About, Fale Conosco).
+   - [data-reveal-group] > ... > [data-reveal-item]: the group is only the
+     scroll trigger (stays fully opaque/static itself); its items fade in
+     staggered via --reveal-index (Recipes/Products carousel cards). */
+[data-reveal],
+[data-reveal-item] {
   opacity: 1;
   transform: none;
 }
 
-.has-scroll-reveal [data-reveal] {
+.has-scroll-reveal [data-reveal],
+.has-scroll-reveal [data-reveal-group] [data-reveal-item] {
   opacity: 0;
   transform: translateY(24px);
   transition: var(--transition-reveal);
+
+  /* --reveal-index (scroll-reveal.js): 0 for a standalone [data-reveal]
+     block, 0/1/2/... for [data-reveal-item] siblings within the same
+     [data-reveal-group] — staggers same-batch cards into a "one at a
+     time" reveal instead of all appearing on the same frame. */
+  transition-delay: calc(var(--reveal-index, 0) * 0.12s);
   will-change: opacity, transform;
 }
 
-.has-scroll-reveal [data-reveal].is-revealed {
+.has-scroll-reveal [data-reveal].is-revealed,
+.has-scroll-reveal [data-reveal-group].is-revealed [data-reveal-item] {
   opacity: 1;
   transform: translateY(0);
 }

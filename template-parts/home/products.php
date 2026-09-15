@@ -14,7 +14,7 @@ $rosa_branca_products = array(
 	array( 'image' => 'farinha-home-3', 'alt' => __( 'Farinha de trigo Rosa Branca integral', 'rosa-branca' ) ),
 );
 ?>
-<section class="home-section home-section--bleed home-section--bleed-right" data-reveal>
+<section class="home-section home-section--bleed home-section--bleed-right">
 	<div class="home-section__row">
 		<div class="home-section__content">
 			<h2 class="home-section__title"><?php esc_html_e( 'Lorem ipsum dolor sit amet', 'rosa-branca' ); ?></h2>
@@ -22,7 +22,7 @@ $rosa_branca_products = array(
 			<a class="btn btn--red" href="<?php echo esc_url( home_url( '/produtos/' ) ); ?>"><?php esc_html_e( 'lorem ipsum', 'rosa-branca' ); ?></a>
 		</div>
 
-		<div class="home-section__media">
+		<div class="home-section__media" data-reveal-group>
 			<div
 				class="home-products__carousel"
 				data-carousel-mount
@@ -34,7 +34,7 @@ $rosa_branca_products = array(
 				data-label="<?php esc_attr_e( 'Produtos Rosa Branca', 'rosa-branca' ); ?>"
 			>
 				<?php foreach ( $rosa_branca_products as $product ) : ?>
-					<div class="home-products__item">
+					<div class="home-products__item" data-reveal-item>
 						<?php rosa_branca_picture( $product['image'], array( 'alt' => $product['alt'] ) ); ?>
 					</div>
 				<?php endforeach; ?>

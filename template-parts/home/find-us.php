@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 ?>
-<section class="home-find-us" data-reveal>
+<section class="home-find-us">
 	<?php rosa_branca_picture( 'encontre-rosa-branca-bg', array( 'img_class' => 'home-find-us__bg', 'alt' => '' ) ); ?>
 	<div class="home-find-us__card container">
 		<h2 class="home-find-us__title"><?php esc_html_e( 'Encontre Rosa Branca', 'rosa-branca' ); ?></h2>

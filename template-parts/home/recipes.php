@@ -29,9 +29,9 @@ $rosa_branca_recipe_card = array(
 );
 $rosa_branca_recipes = array_fill( 0, 3, $rosa_branca_recipe_card );
 ?>
-<section class="home-section home-section--bleed home-section--bleed-left" data-reveal>
+<section class="home-section home-section--bleed home-section--bleed-left">
 	<div class="home-section__row">
-		<div class="home-section__media">
+		<div class="home-section__media" data-reveal-group>
 			<div
 				class="home-recipes__carousel"
 				data-carousel-mount
@@ -43,7 +43,7 @@ $rosa_branca_recipes = array_fill( 0, 3, $rosa_branca_recipe_card );
 				data-label="<?php esc_attr_e( 'Receitas em destaque', 'rosa-branca' ); ?>"
 			>
 				<?php foreach ( $rosa_branca_recipes as $recipe ) : ?>
-					<article class="recipe-card">
+					<article class="recipe-card" data-reveal-item>
 						<div class="recipe-card__media">
 							<?php rosa_branca_picture( 'recipe-card-placeholder', array( 'alt' => '' ) ); ?>
 						</div>
