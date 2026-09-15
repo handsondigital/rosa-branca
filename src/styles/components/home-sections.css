@@ -124,13 +124,26 @@
  * always overflow a grown container and clip cleanly, but Products' is only
  * 56px away from its 910px box already, so flex-grow left a visibly empty
  * gap between the 3rd image and the true edge instead of the image itself
- * reaching it. margin-left:auto keeps the box at its natural (already
- * content-matched) size and pushes that whole block flush to the true edge
- * instead — the 910px crop is unchanged, only its position moves.
- */
+ * reaching it. The 910px crop itself is unchanged either way, only its
+ * position moves.
+ *
+ * NOT margin-left:auto (an earlier version of this rule): that pushed the
+ * box flush to the true edge at any viewport width, which matched Figma
+ * exactly at the 1440px reference (nothing left over to push with) but,
+ * since the box itself doesn't grow, meant the PUSH grows unbounded on
+ * wider screens instead — confirmed live: a 50px gap after the text column
+ * at 1440px (correct) became 282.5px at 1920px (a real, reported void).
+ * No margin at all lets the row's own gap:50px (above) be the only space
+ * between text and media at every width — same "stop stretching something
+ * with nothing left to stretch into" fix already applied to the Recipes
+ * peek-offset for the same class of problem. Trade-off: past ~1454px
+ * (380 + 50 + 910 + gutter fits with room to spare) media stops reaching
+ * the true edge and trailing background appears after it instead — the
+ * same honest content-runs-out limit Recipes' fix accepted past its own
+ * viewport ceiling, preferred over a growing gap where real content (the
+ * text column) already sits. */
 .home-section--bleed-right .home-section__media {
   flex: 0 1 910px;
-  margin-left: auto;
 }
 
 /* Fixed for the same reason as bleed-left's content above (measured
