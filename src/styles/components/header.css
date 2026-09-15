@@ -1,5 +1,13 @@
+/* Fixed (not absolute): stays pinned to the viewport while scrolling —
+   was already out of normal flow either way (absolute never reserved
+   space for it), so this is a pure scroll-behavior change, nothing else
+   shifts. .mobile-menu / .main-menu__search-form still position
+   correctly against it: they resolve against their own nearer positioned
+   ancestor (.site-header / .main-menu__search-wrap respectively), not
+   directly against the viewport, so a fixed vs. absolute ancestor makes
+   no difference to them. */
 .site-header {
-  position: absolute;
+  position: fixed;
   top: 30px;
   left: 0;
   right: 0;
