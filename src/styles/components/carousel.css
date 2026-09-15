@@ -193,9 +193,27 @@
   width: 322px;
 }
 
+/* Mobile (per the real Figma mobile frame, confirmed against a screenshot
+   from it): arrows are hidden entirely — one full-width slide at a time
+   (below) is swiped/scrolled natively (Embla still drives that, arrows are
+   purely a supplementary desktop affordance), and the dots center under
+   the card instead of the space-between split (arrows left, dots right)
+   desktop uses. .carousel__arrows-placeholder (reserves the arrows' box
+   pre-mount, see its own comment above) is hidden too, or centering an
+   empty 176px reserved box would still visibly off-center the dots before
+   Carousel.jsx replaces it. */
 @media (max-width: 767px) {
   .carousel--peek .carousel__slide,
   .home-section--bleed-right .carousel--peek .carousel__slide {
     width: 100%;
+  }
+
+  .carousel__controls {
+    justify-content: center;
+  }
+
+  .carousel__arrows,
+  .carousel__arrows-placeholder {
+    display: none;
   }
 }
