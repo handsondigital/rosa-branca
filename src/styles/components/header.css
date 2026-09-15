@@ -51,7 +51,11 @@
   flex-direction: column;
   align-items: center;
   gap: 5px;
-  padding: 10px 20px;
+
+  /* No bottom padding: the hover dot (::after below) now lives inside this
+     box, after the 5px gap — a symmetric 10px bottom would push it (and
+     the item's own bottom edge) lower than Figma's hover box actually is. */
+  padding: 10px 20px 0;
   font-family: var(--font-heading);
   font-weight: 500;
   font-size: var(--text-nav);
