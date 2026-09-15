@@ -18,21 +18,37 @@
   background: linear-gradient(90deg, rgb(255 255 255 / 92%) 0%, rgb(255 255 255 / 0%) 65%);
 }
 
+/* Not centered below 1024px, same reasoning as .home-hero__content
+   (home-hero.css): a centered block only stays inside .hero-shell's fixed
+   height while shorter than it — centering pushes an oversized block's top
+   edge above the box once it isn't. .page-hero has its own overflow:hidden
+   (below), so this specific hero wouldn't leak visibly behind the header
+   the way home-hero's did, but it would silently clip the title's top
+   instead — same defect, different symptom. flex-start keeps any overflow
+   at the bottom (safe, still in flow) instead of the top. */
 .page-hero__content {
-  justify-content: center;
+  justify-content: flex-start;
   gap: 30px;
+  padding-top: 150px;
+}
+
+/* No dedicated Figma frame for 768–1023px — same header-clearance
+   reasoning as .home-hero__content's own tablet tier. */
+@media (min-width: 768px) {
+  .page-hero__content {
+    padding-top: 190px;
+  }
 }
 
 /* Desktop (>=1024px): content is bottom-anchored 100px above the hero's
    own bottom edge per Figma (node 631:6917 — content block ends at y=668
-   within a 768px-tall banner: 768-668=100), not vertically centered — the
-   same class of fix as .home-hero__content (home-hero.css), which cited
-   the same Figma-metadata-over-centering reasoning. Since the hero's own
-   height is fixed regardless of viewport width, this padding-bottom holds
-   the same visual gap at any desktop width, not just the 1440 reference. */
+   within a 768px-tall banner: 768-668=100). Since the hero's own height is
+   fixed regardless of viewport width, this padding-bottom holds the same
+   visual gap at any desktop width, not just the 1440 reference. */
 @media (min-width: 1024px) {
   .page-hero__content {
     justify-content: flex-end;
+    padding-top: 0;
     padding-bottom: 100px;
   }
 }

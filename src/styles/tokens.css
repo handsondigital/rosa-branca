@@ -142,3 +142,26 @@
     --container-padding: 48px;
   }
 }
+
+/* "Small desktop" tier — also has no dedicated Figma frame. Every
+   >=1024px rule across the codebase (header.css, home-sections.css,
+   carousel.css, ...) was tuned and pixel-verified only against the
+   1440px+ reference (see their own comments), under the assumption that
+   .container-padding stays a flat 100px there — true above ~1366px, but
+   between 1024–1365px that 100px-per-side gutter eats disproportionately
+   more of the viewport, which is what was actually behind the reported
+   "everything under 1440px starts breaking": e.g. the Recipes/Products
+   "peek" carousel (carousel.css) had almost no room left to peek a 2nd
+   card. 72px is a reasoned midpoint between the 48px tablet gutter above
+   and the 100px desktop one — not a Figma-verified value (none exists to
+   verify against) but internally coherent with the rest of the scale.
+   1366px (not 1280/1440) is the upper bound because that's the measured
+   width where .main-menu__link (header.css) stops wrapping to 2 lines —
+   below it the nav still needs the mobile-style toggle regardless of this
+   token, so tying the two together keeps "small desktop" meaning one
+   consistent thing sitewide instead of drifting breakpoint-by-breakpoint. */
+@media (min-width: 1024px) and (max-width: 1365px) {
+  :root {
+    --container-padding: 72px;
+  }
+}

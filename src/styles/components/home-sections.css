@@ -155,6 +155,26 @@
   flex-shrink: 0;
 }
 
+/* "Small desktop" tier (1024–1365px, tokens.css — no Figma frame for it):
+   380px is a Figma-verified "Hug" value at the 1440px reference, not a
+   requirement at every width below it. Left at 380 through this band, the
+   peek carousels next to these text columns (carousel.css) had almost no
+   width left to peek a 2nd card (measured ~114px sliver at 1024px) —
+   shrinking the text column trades some of its own generous line-length
+   for giving the media column back real peek room, which is what
+   "smaller desktop, not stacked mobile" (explicit direction for this
+   tier) actually needs. Declared after BOTH base 380px rules above (not
+   next to bleed-left's own) so it wins the cascade for both at equal
+   specificity — source order, not just the media condition, decides that.
+   Not applied >=1366px: that's already a validated, working width for the
+   full 380px column. */
+@media (min-width: 1024px) and (max-width: 1365px) {
+  .home-section--bleed-left .home-section__content,
+  .home-section--bleed-right .home-section__content {
+    width: 300px;
+  }
+}
+
 .home-section--bleed-right .home-section__row {
   padding-left: var(--container-gutter);
 }

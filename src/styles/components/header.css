@@ -304,7 +304,21 @@
   border-top: 1px solid var(--color-gray-100);
 }
 
-@media (min-width: 1024px) {
+/* 1366px, not the 1024px every other >=desktop rule in this codebase
+   uses: measured live (every .main-menu__link width, binary-searched
+   across 1024–1440px) as the exact point the full 6-item nav stops
+   wrapping "Sobre a Marca"/"Onde Comprar"/"Fale Conosco" to 2 lines —
+   below it, no amount of the tablet .container-padding fix (tokens.css)
+   fixes this specifically, since .main-menu__link's own horizontal
+   padding is independent of that token. Keeping the already-built,
+   already-tested mobile toggle/dropdown active through the whole
+   1024–1365px "small desktop" tier (tokens.css) is the coherent fix here:
+   same reasoning as the mobile menu itself already sound at that width,
+   nothing new to build or verify from scratch. The rest of the page
+   (home-sections.css, carousel.css, ...) stays in its side-by-side
+   desktop layout at 1024px+ regardless — this is purely a header-nav
+   space constraint, not a signal to stack the whole page earlier. */
+@media (min-width: 1366px) {
   .main-menu__nav {
     display: block;
     margin-left: auto;

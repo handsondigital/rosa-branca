@@ -31,26 +31,47 @@
 
 /* .home-hero__container/.home-hero__content are styled by
    .hero-shell__container/.hero-shell__content (hero-shell.css) — only the
-   properties unique to this hero (the content gap; the desktop vertical
-   anchor below) live here. */
+   properties unique to this hero (the content gap; the vertical anchor
+   below) live here.
+
+   NOT centered (justify-content:center would be the naive default) — a
+   centered block only stays fully inside .hero-shell's fixed height while
+   its own content is shorter than that box; centering pushes an OVERSIZED
+   block's top edge above the box entirely once it isn't, which is exactly
+   what happened here below 1024px with the current (long) placeholder copy
+   at narrow widths: the title's first line rendered above .hero-shell,
+   hidden behind .site-header (header.css: `position: fixed`, so it's
+   always painted on top regardless of scroll). flex-start avoids that
+   class of bug structurally — any overflow from unusually long copy grows
+   the box downward (still in normal flow, never hidden) instead of
+   upward. .site-header's bottom edge is always 114px from the slide top
+   (`position: fixed; top: 30px` + a fixed 84px-tall .main-menu, header.css
+   — no breakpoint changes either value), so padding-top only needs to
+   clear that, plus breathing room per tier below. */
 .home-hero__content {
-  justify-content: center;
+  justify-content: flex-start;
   gap: 24px;
+  padding-top: 150px;
+}
+
+/* No dedicated Figma frame for 768–1023px (tokens.css's own tablet-scale
+   comment) — same 114px header clearance as mobile, slightly more
+   breathing room since .hero-shell is taller here (768px vs mobile's
+   630px, hero-shell.css) with no forced Y position for the content block
+   in the middle of it. */
+@media (min-width: 768px) {
+  .home-hero__content {
+    padding-top: 190px;
+  }
 }
 
 /* Desktop (>=1024px, where .site-header shows its full pill nav — see
    header.css): title sits a fixed 152px below the header's bottom edge
-   per Figma, not vertically centered in the slide — centering only landed
-   there by coincidence for this exact copy length, and shifts with any
-   text-length change. .site-header is `position: absolute; top: 30px`
-   with a fixed 84px-tall .main-menu (header.css, no breakpoint override),
-   so its bottom edge is always 114px from the slide top regardless of
-   viewport width: 114 + 152 = 266px padding-top pins the title exactly
-   152px under the header at every desktop width, not just one reference
+   per Figma. 114 + 152 = 266px padding-top pins the title exactly 152px
+   under the header at every desktop width, not just one reference
    viewport. */
 @media (min-width: 1024px) {
   .home-hero__content {
-    justify-content: flex-start;
     padding-top: 266px;
   }
 }
