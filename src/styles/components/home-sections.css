@@ -400,6 +400,20 @@
     width: 100%;
   }
 
+  /* Products only: real Figma mobile frame (node 79:511, "Home - Mobile")
+     shows media before text for BOTH Recipes and Products when stacked
+     (the product image at y=2073 sits above its own title/text/button at
+     y=2613+) — Recipes already matches for free since its DOM order is
+     media-then-content (recipes.php) either way. Products' DOM order is
+     content-then-media instead (products.php: text column comes first,
+     matching its desktop-only visual left/right split, where no reorder
+     is needed) — order:-1 flips just the stacked/mobile rendering order
+     without touching that file's markup or the desktop layout above this
+     breakpoint. */
+  .home-section--bleed-right .home-section__media {
+    order: -1;
+  }
+
   .home-find-us {
     padding: 50px 30px;
   }

@@ -74,6 +74,22 @@
   max-width: 100%;
 }
 
+/* Stacked layout (home-sections.css: <=1023px) — the real Figma mobile
+   frame (node 79:511) has these at ~100% of their column's width (e.g.
+   Recipes' Red Button is 379px of a 380px column, About's White Button
+   380 of 380), not the fixed 270/288px desktop values above. Those fixed
+   widths already have max-width:100% but that only CLAMPS a value that
+   would otherwise overflow — it doesn't stretch a value that's already
+   smaller than its container, which is exactly what a 270px button inside
+   a ~330px+ stacked column does (a real, visible gap to its right, not
+   this file's intent for that width at all). */
+@media (max-width: 1023px) {
+  .home-section__content .btn--red,
+  .home-section__content .btn--outline {
+    width: 100%;
+  }
+}
+
 .link-with-icon {
   display: inline-flex;
   align-items: center;
