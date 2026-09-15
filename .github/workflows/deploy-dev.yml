@@ -1,0 +1,94 @@
+# Builds the theme (Vite/React assets + font/image pipelines) and rsyncs it
+# over SSH to the DEV server (https://devrosabranca.handson-ti.com/) on every
+# push to main. Also runnable by hand from the Actions tab
+# (workflow_dispatch), e.g. to redeploy without a new commit.
+#
+# devrosabranca.handson-ti.com sits behind Cloudflare (confirmed via
+# response headers: Server: cloudflare) — Cloudflare only proxies HTTP(S),
+# not SSH, so DEPLOY_HOST below must be the origin server's real
+# hostname/IP, not that public domain. Get it from infra along with the
+# rest; SSHing to the public domain on port 22 will just time out.
+#
+# Required repo secrets (Settings -> Secrets and variables -> Actions),
+# scoped to the "development" GitHub Environment referenced below (create it
+# under Settings -> Environments if you want required-reviewer approval
+# gates or environment-only secrets — the workflow works without that too,
+# GitHub just auto-creates a bare environment on first use). A later
+# production workflow (separate file, e.g. deploy-production.yml) can reuse
+# these same secret NAMES scoped to its own "production" environment instead
+# of colliding with these:
+#   DEPLOY_HOST        origin server hostname or IP (NOT the Cloudflare domain)
+#   DEPLOY_PORT        SSH port (usually 22)
+#   DEPLOY_USER        SSH user
+#   DEPLOY_SSH_KEY     private key with access to that user (PEM, no passphrase —
+#                      GitHub Actions can't interactively unlock one)
+#   DEPLOY_PATH        absolute path to THIS THEME's folder on the server,
+#                      e.g. /var/www/html/wp-content/themes/rosa-branca
+#                      (NOT the WordPress root — see the --delete warning below)
+#
+# --delete makes the remote folder mirror this repo exactly (removes files on
+# the server that no longer exist here) — verify DEPLOY_PATH points at the
+# theme folder specifically before this ever runs for real; pointed at the
+# wrong directory, --delete will erase it.
+
+name: Deploy theme (dev)
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    environment: development
+    env:
+      DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
+      DEPLOY_PORT: ${{ secrets.DEPLOY_PORT || '22' }}
+      DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
+      DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      # --legacy-peer-deps: this repo has a pre-existing peer-dependency
+      # conflict (eslint-plugin-react's peer range vs. eslint@10.10.0) unrelated
+      # to deployment — plain `npm ci` fails on it. Same flag needed locally.
+      - name: Install dependencies
+        run: npm ci --legacy-peer-deps
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Build
+        run: npm run build
+
+      - name: Set up SSH agent
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.DEPLOY_SSH_KEY }}
+
+      - name: Trust server host key
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan -p "$DEPLOY_PORT" -H "$DEPLOY_HOST" >> ~/.ssh/known_hosts
+
+      - name: Deploy via rsync
+        run: |
+          rsync -avz --delete \
+            -e "ssh -p $DEPLOY_PORT" \
+            --exclude='.git/' \
+            --exclude='.github/' \
+            --exclude='node_modules/' \
+            --exclude='reports/' \
+            --exclude='assets/fonts/raw/' \
+            --exclude='.gitignore' \
+            --exclude='.npmrc' \
+            ./ "$DEPLOY_USER@$DEPLOY_HOST:$DEPLOY_PATH"
