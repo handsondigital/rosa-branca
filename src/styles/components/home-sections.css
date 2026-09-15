@@ -70,9 +70,17 @@
   flex: 1 1 1010px;
 }
 
+/* Fixed, not flex-grow/shrink: at some widths (e.g. the 1440px reference)
+   media(1010) + gap(50) + content(280 basis) slightly exceeds the row's
+   available space, so content — sharing flex-grow:1 with media — shrank
+   below its own 380px max-width instead of reaching it (measured ~277px
+   live). Figma's text block is a fixed 380px "Hug" box, not a range, so
+   content shouldn't flex at all here — media (already tolerant of
+   shrinking, it bleeds past the viewport anyway) absorbs 100% of the
+   squeeze instead, same principle as bleed-right's media below. */
 .home-section--bleed-left .home-section__content {
-  flex: 1 1 280px;
-  max-width: 380px;
+  width: 380px;
+  flex-shrink: 0;
 }
 
 .home-section--bleed-left .home-section__row {
@@ -102,9 +110,13 @@
   margin-left: auto;
 }
 
+/* Fixed for the same reason as bleed-left's content above (measured
+   ~365px live instead of 380 at the 1440px reference) — media (fixed via
+   margin-left:auto, already not growing) is unaffected either way, this
+   was purely content incorrectly sharing the row's flex-shrink. */
 .home-section--bleed-right .home-section__content {
-  flex: 1 1 280px;
-  max-width: 380px;
+  width: 380px;
+  flex-shrink: 0;
 }
 
 .home-section--bleed-right .home-section__row {
