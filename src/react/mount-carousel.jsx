@@ -25,13 +25,16 @@ function mountCarousel(container) {
   const autoplayMs = container.dataset.autoplay ? Number(container.dataset.autoplay) : null;
   const ariaLabel = container.dataset.label || undefined;
   const dotsTarget = container.dataset.dotsTarget ? document.querySelector(container.dataset.dotsTarget) : null;
+  const arrowsTarget = container.dataset.arrowsTarget ? document.querySelector(container.dataset.arrowsTarget) : null;
   const gap = container.dataset.gap ? Number(container.dataset.gap) : undefined;
 
   // The SSR fallback has no arrows row at all (that's entirely rendered by
-  // <Carousel> below) — a static placeholder sibling (see recipes.php /
-  // products.php) reserves its exact box pre-mount so this swap doesn't
-  // shift the layout. Once the real arrows exist, the placeholder must go.
-  const arrowsPlaceholder = container.nextElementSibling;
+  // <Carousel> below) — a static placeholder sibling of the arrows' target
+  // node (see recipes.php / products.php) reserves its exact box pre-mount
+  // so this swap doesn't shift the layout. Once the real arrows exist (or
+  // fall back to rendering inline, if there's no target), the placeholder
+  // must go.
+  const arrowsPlaceholder = arrowsTarget?.nextElementSibling;
   const hasArrowsPlaceholder =
     showArrows && arrowsPlaceholder?.classList.contains("carousel__arrows-placeholder");
 
@@ -58,6 +61,7 @@ function mountCarousel(container) {
         autoplayMs={autoplayMs}
         ariaLabel={ariaLabel}
         dotsTarget={dotsTarget}
+        arrowsTarget={arrowsTarget}
         {...(gap !== undefined ? { gap } : {})}
       />
     );

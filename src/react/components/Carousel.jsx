@@ -19,12 +19,13 @@ import arrowRightSvg from "../../../assets/icons/carousel-arrow-right.svg?raw";
  * match fractional-visible-items scenarios), so none of that class of bug
  * applies, and it also ships ~10x lighter (headless, no bundled CSS).
  *
- * Per Figma, the dots for the "peek" sections (recipes/products) don't sit
- * next to the arrows — they sit in the *text* column, right under the CTA
- * button, while the arrows stay under the media. `dotsTarget` (a real DOM
- * node rendered by PHP in the text column, found by mount-carousel.jsx) is
- * where a portal renders the dots, so one Embla instance still drives both
- * physically-separate control groups.
+ * Per explicit visual QA, the dots AND arrows for the "peek" sections
+ * (recipes/products) both sit in the *text* column, right under the CTA
+ * button, next to each other — not under the media, where there isn't a
+ * fixed control row to anchor them to consistently. `dotsTarget`/
+ * `arrowsTarget` (real DOM nodes rendered by PHP in the text column, found
+ * by mount-carousel.jsx) are where portals render them, so one Embla
+ * instance still drives controls physically separate from the media.
  *
  * Progressive enhancement: `slidesHtml` is the real server-rendered markup
  * captured from the DOM before React mounted (see home.js), so the exact
@@ -39,6 +40,7 @@ export default function Carousel({
   autoplayMs = null,
   ariaLabel,
   dotsTarget = null,
+  arrowsTarget = null,
   gap = 30, // px between slides — Figma varies this per section (e.g. recipe cards: 50, product images: 0)
 }) {
   const count = slidesHtml.length;
@@ -79,6 +81,27 @@ export default function Carousel({
   const hasArrows = showArrows && count > 1;
   const hasDots = showDots && scrollSnapCount > 1;
 
+  const arrows = hasArrows && (
+    <div className="carousel__arrows">
+      <button
+        type="button"
+        className="carousel__arrow"
+        onClick={() => emblaApi?.scrollPrev()}
+        disabled={!isHero && !canPrev}
+        aria-label="Anterior"
+        dangerouslySetInnerHTML={{ __html: arrowLeftSvg }}
+      />
+      <button
+        type="button"
+        className="carousel__arrow"
+        onClick={() => emblaApi?.scrollNext()}
+        disabled={!isHero && !canNext}
+        aria-label="Próximo"
+        dangerouslySetInnerHTML={{ __html: arrowRightSvg }}
+      />
+    </div>
+  );
+
   const dots = hasDots && (
     <div className="carousel__dots">
       {Array.from({ length: scrollSnapCount }, (_, index) => (
@@ -111,26 +134,7 @@ export default function Carousel({
         </div>
       </div>
 
-      {hasArrows && (
-        <div className="carousel__arrows">
-          <button
-            type="button"
-            className="carousel__arrow"
-            onClick={() => emblaApi?.scrollPrev()}
-            disabled={!isHero && !canPrev}
-            aria-label="Anterior"
-            dangerouslySetInnerHTML={{ __html: arrowLeftSvg }}
-          />
-          <button
-            type="button"
-            className="carousel__arrow"
-            onClick={() => emblaApi?.scrollNext()}
-            disabled={!isHero && !canNext}
-            aria-label="Próximo"
-            dangerouslySetInnerHTML={{ __html: arrowRightSvg }}
-          />
-        </div>
-      )}
+      {arrows && (arrowsTarget ? createPortal(arrows, arrowsTarget) : arrows)}
 
       {dots && (dotsTarget ? createPortal(dots, dotsTarget) : dots)}
     </div>

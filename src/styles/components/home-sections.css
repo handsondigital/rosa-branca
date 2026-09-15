@@ -33,10 +33,21 @@
 /*
  * Bleed variant: per the real Figma coordinates (Home, frame 2:6), the
  * Recipes and Products rows are NOT a symmetric centered two-column grid —
- * their media block runs edge-to-edge to alternating sides of the viewport
- * (left: 0→910px, right: 530→1440px) while only the text column keeps the
- * standard page gutter. Only "Sobre a Marca" uses the plain centered
- * .home-section__grid above (photo/text both sit inside the 100px gutter).
+ * their media block runs edge-to-edge to the viewport (100% width, alternating
+ * sides) while the text column keeps the standard page gutter, aligned with
+ * everything else built on .container (header/hero/footer — base.css). Only
+ * "Sobre a Marca" uses the plain centered .home-section__grid above (photo/
+ * text both sit inside the 100px gutter).
+ *
+ * The text-column gutter below reuses .container's own formula
+ * (max(--container-padding, (100% - 1240px) / 2), not a flat
+ * var(--container-padding)) — a flat padding only matches .container's real
+ * edge by coincidence at one viewport width and drifts apart above/below it,
+ * the exact bug .container's own min()-based formula was written to kill
+ * (see base.css). Applied as a single-side padding here (not the centered
+ * max-width+margin:auto .container uses) since only one edge of this row
+ * needs to land on the container line — the other bleeds to the true
+ * viewport edge.
  */
 .home-section--bleed .home-section__row {
   display: flex;
@@ -48,12 +59,12 @@
  * Recipes (bleed-left): widened from the raw Figma frame's 910px so ~2.5
  * cards peek through (380px card + 50px gap each — confirmed via Figma
  * metadata: cards sit at x=100/530, i.e. 480→530 = 50px gap, not 30) instead
- * of a thin ~90px sliver — per explicit visual correction. Still bleeds to
- * the true viewport edge (not capped at 1240) — matches the raw Figma
- * coordinates (media block: 0→910px) and hasn't been contested.
+ * of a thin ~90px sliver — per explicit visual correction. Bleeds to the
+ * true viewport edge on the left (flex-grow fills whatever space the right
+ * gutter below doesn't take).
  * Fixed px flex-basis (not %): the row's own padding-right (below) eats
  * into its content-box width, so a percentage would resolve against
- * (viewport - 100px) instead of the real 1440px frame.
+ * (viewport - gutter) instead of the real 1440px frame.
  */
 .home-section--bleed-left .home-section__media {
   flex: 1 1 1010px;
@@ -61,34 +72,54 @@
 
 .home-section--bleed-left .home-section__content {
   flex: 1 1 280px;
+  min-width: 360px;
   max-width: 380px;
 }
 
 .home-section--bleed-left .home-section__row {
-  padding-right: var(--container-padding);
+  padding-right: max(var(--container-padding), calc((100% - 1240px) / 2));
 }
 
 /*
- * Products (bleed-right): per Figma metadata (frame 762:3827), media is
- * exactly 910px with the 3 images touching edge-to-edge (0/322/644, no
- * gap) — the 3rd is genuinely ~82% visible/18% cropped in the source file
- * itself, not a bug. Unlike Recipes, this row is explicitly capped at the
- * 1240px grid (not bled to the true viewport edge) — min() formula matches
- * .container/.site-header (base.css). 910 (media) + 50 (row gap) + 280
- * (content) = 1240 exactly.
+ * Products (bleed-right): text column's left edge aligns with .container's
+ * left edge via the same single-side gutter formula as bleed-left; media
+ * bleeds to the true viewport edge on the right. Previously this row was
+ * capped at max-width:1240 (no bleed at all, per the raw Figma frame
+ * 762:3827 metadata) — corrected per explicit visual QA: it read as
+ * inconsistent against Recipes' full-bleed media right above/below it.
+ *
+ * Unlike Recipes, media does NOT flex-grow here: its content is exactly 3
+ * fixed 322px images with no gap (966px total, per the Figma-verified crop
+ * documented below) — Recipes' card content is wide enough (1240px) to
+ * always overflow a grown container and clip cleanly, but Products' is only
+ * 56px away from its 910px box already, so flex-grow left a visibly empty
+ * gap between the 3rd image and the true edge instead of the image itself
+ * reaching it. margin-left:auto keeps the box at its natural (already
+ * content-matched) size and pushes that whole block flush to the true edge
+ * instead — the 910px crop is unchanged, only its position moves.
  */
-.home-section--bleed-right .home-section__row {
-  max-width: min(1240px, calc(100% - (var(--container-padding) * 2)));
-  margin-inline: auto;
-}
-
 .home-section--bleed-right .home-section__media {
-  flex: 1 1 910px;
+  flex: 0 1 910px;
+  margin-left: auto;
 }
 
 .home-section--bleed-right .home-section__content {
   flex: 1 1 280px;
+  min-width: 360px;
   max-width: 380px;
+}
+
+/* Without a min-width, content can flex-shrink well below what
+   .home-section__controls (dots + arrows side by side, ~360px) needs —
+   confirmed live around the 1024–1300px range, where it shrinks to
+   ~210px and the row would wrap/overflow. 360px leaves it just under its
+   own 380px max-width, so media (already tolerant of shrinking — it's a
+   carousel clipped by overflow:hidden) absorbs the rest of the squeeze
+   instead. Declared once here since both bleed variants share the same
+   controls row and the same failure mode. */
+
+.home-section--bleed-right .home-section__row {
+  padding-left: max(var(--container-padding), calc((100% - 1240px) / 2));
 }
 
 .home-section__title {
@@ -103,10 +134,13 @@
   margin-bottom: 24px;
 }
 
-/* Portal target for the Carousel's pagination dots — per Figma these sit in
-   the text column, under the CTA button, not next to the arrows (which stay
-   with the media). See Carousel.jsx's dotsTarget / createPortal. */
-.home-section__content .carousel__dots {
+/* Wraps the Carousel's portaled dots + arrows — per explicit visual QA both
+   sit together in the text column, under the CTA button, not split across
+   the row with the media (see Carousel.jsx's dotsTarget/arrowsTarget). */
+.home-section__controls {
+  display: flex;
+  align-items: center;
+  gap: 30px;
   margin-top: 30px;
 }
 

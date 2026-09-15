@@ -20,7 +20,11 @@ $rosa_branca_products = array(
 			<h2 class="home-section__title"><?php esc_html_e( 'Lorem ipsum dolor sit amet', 'rosa-branca' ); ?></h2>
 			<p class="home-section__text"><?php esc_html_e( 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse ut massa neque. Etiam egestas magna sit amet elit accumsan tristique in ut nunc. Sed porta, ex eget ornare facilisis, dui libero bibendum enim, vitae sodales turpis ex vel nisi. Phasellus felis odio, egestas sed elit in, finibus dapibus dui. Integer purus nunc, hendrerit eu odio nec, bibendum fringilla erat. Quisque condimentum lectus nec hendrerit ullamcorper. Proin vestibulum eros sit amet diam feugiat rhoncus.', 'rosa-branca' ); ?></p>
 			<a class="btn btn--red" href="<?php echo esc_url( home_url( '/produtos/' ) ); ?>"><?php esc_html_e( 'lorem ipsum', 'rosa-branca' ); ?></a>
-			<div class="carousel__dots" data-carousel-dots="products"></div>
+			<div class="home-section__controls">
+				<div class="carousel__dots" data-carousel-dots="products"></div>
+				<div class="carousel__arrows" data-carousel-arrows="products"></div>
+				<div class="carousel__arrows-placeholder" aria-hidden="true"></div>
+			</div>
 		</div>
 
 		<div class="home-section__media">
@@ -31,6 +35,7 @@ $rosa_branca_products = array(
 				data-arrows="true"
 				data-dots="true"
 				data-dots-target="[data-carousel-dots='products']"
+				data-arrows-target="[data-carousel-arrows='products']"
 				data-gap="0"
 				data-label="<?php esc_attr_e( 'Produtos Rosa Branca', 'rosa-branca' ); ?>"
 			>
@@ -40,7 +45,6 @@ $rosa_branca_products = array(
 					</div>
 				<?php endforeach; ?>
 			</div>
-			<div class="carousel__arrows-placeholder" aria-hidden="true"></div>
 		</div>
 	</div>
 </section>
