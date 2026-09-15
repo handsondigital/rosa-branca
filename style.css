@@ -1,0 +1,13 @@
+/*
+Theme Name: Rosa Branca
+Theme URI: https://rosabranca.com.br
+Author: Rosa Branca
+Description: Tema WordPress monolítico (PHP/SSR + React seletivo via Vite) para o site institucional Rosa Branca.
+Version: 0.1.0
+Requires at least: 6.5
+Requires PHP: 8.0
+Text Domain: rosa-branca
+*/
+
+/* Estilos reais são compilados pelo Vite a partir de src/styles e enfileirados via inc/assets.php.
+   Este arquivo existe apenas para satisfazer o cabeçalho de tema exigido pelo WordPress. */

@@ -1,0 +1,122 @@
+/* Shared styles for the React <Carousel> island (hero, recipes, products).
+   Embla is headless (ships zero CSS) — this file provides the required
+   viewport/track layout (overflow-hidden + flex) as well as sizing slides
+   and styling our own custom arrows/dots.
+
+   Arrows render next to the media (inside .carousel); dots for the "peek"
+   variant are portaled into the text column instead (see Carousel.jsx) —
+   that's where Figma puts them, under the CTA button, not next to the
+   arrows — so their layout rules live with .home-section__content, not
+   here (see home-sections.css). Only the hero's own absolutely-positioned
+   dots (no separate text column to portal into) are styled below. */
+
+.carousel {
+  position: relative;
+}
+
+.carousel__viewport {
+  overflow: hidden;
+}
+
+.carousel__track {
+  display: flex;
+}
+
+.carousel__slide {
+  flex-shrink: 0;
+  min-width: 0;
+}
+
+.carousel__arrows {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-top: 30px;
+}
+
+/* Reserves the exact box .carousel__arrows occupies (80px height + 30px
+   margin-top) before the Carousel island mounts. Without this, the React
+   mount swaps a shorter static block for a taller one after first paint —
+   a real, measured layout shift (Lighthouse: recipes/products sections,
+   CLS ~0.34 on mobile) since the SSR fallback has no arrows row at all.
+   Removed by mount-carousel.jsx once the real arrows render. */
+.carousel__arrows-placeholder {
+  height: 80px;
+  margin-top: 30px;
+}
+
+.carousel__arrow {
+  display: block;
+  width: 80px;
+  height: 80px;
+  padding: 0;
+  line-height: 0;
+}
+
+.carousel__arrow svg {
+  display: block;
+  width: 80px;
+  height: 80px;
+}
+
+.carousel__arrow:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.carousel__dots {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 10px;
+}
+
+.carousel__dot {
+  width: 20px;
+  height: 10px;
+  border-radius: var(--radius-full);
+  background: var(--color-brand-blue-light);
+  transition: background-color 0.2s ease, width 0.2s ease;
+  cursor: pointer;
+}
+
+.carousel__dot--active {
+  background: var(--color-heading-blue);
+  width: 40px;
+}
+
+/* Hero variant: full-bleed slide, dots overlaid at the bottom, no arrows,
+   no separate text column to portal into — stays inline + absolutely
+   positioned over the slide itself. */
+.carousel--hero .carousel__slide {
+  flex: 0 0 100%;
+}
+
+.carousel--hero .carousel__dots {
+  position: absolute;
+  bottom: 50px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 5;
+}
+
+/* Peek variant, recipe cards: 380px each (matches .recipe-card's own width) */
+.carousel--peek .carousel__slide {
+  width: 380px;
+}
+
+/* Peek variant, product images: 322px each — narrower than recipe cards.
+   Reusing the 380px rule above clipped the 3rd (of only 3) product images,
+   since 3×380+2×0 > the media column's width sized for 3×322+2×0.
+   3 extra classes of specificity to reliably beat the rule above regardless
+   of CSS import order. */
+.home-section--bleed-right .carousel--peek .carousel__slide {
+  width: 322px;
+}
+
+@media (max-width: 767px) {
+  .carousel--peek .carousel__slide,
+  .home-section--bleed-right .carousel--peek .carousel__slide {
+    width: 100%;
+  }
+}

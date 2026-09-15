@@ -1,0 +1,90 @@
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  height: 62px;
+  padding-inline: 50px;
+  border-radius: var(--radius-full);
+  font-family: var(--font-body);
+  font-size: var(--text-body);
+  text-transform: uppercase;
+  text-align: center;
+  white-space: nowrap;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+.btn--red {
+  background: var(--color-brand-red);
+  color: var(--color-white);
+}
+
+.btn--red:hover,
+.btn--red:focus-visible {
+  background: #c52118;
+}
+
+.btn--blue {
+  background: var(--color-brand-blue);
+  color: var(--color-white);
+}
+
+.btn--blue:hover,
+.btn--blue:focus-visible {
+  background: #014c90;
+}
+
+.btn--outline {
+  background: var(--color-white);
+  color: var(--color-heading-blue);
+  border: var(--border-width-md) solid var(--color-brand-blue);
+  height: 60px;
+  padding-inline: 48px;
+}
+
+.btn--outline:hover,
+.btn--outline:focus-visible {
+  background: var(--color-heading-blue);
+  border-color: var(--color-brand-blue);
+  color: var(--color-white);
+}
+
+.btn--block {
+  width: 100%;
+}
+
+/* Figma gives each CTA instance its own fixed width rather than letting it
+   hug the (identical placeholder) text — "Red Button" is 376px in the hero
+   (762:3766) but 270px in recipes/products (771:4099, 771:4104); the
+   outline "White Button" next to the about photo is 288px (771:4123). Kept
+   as layout-specific overrides (not a .btn default) since the width is a
+   per-placement design decision, not a universal button rule. */
+.home-hero__content .btn {
+  width: 376px;
+  max-width: 100%;
+}
+
+.home-section__content .btn--red {
+  width: 270px;
+  max-width: 100%;
+}
+
+.home-section__content .btn--outline {
+  width: 288px;
+  max-width: 100%;
+}
+
+.link-with-icon {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--color-brand-blue);
+  font-size: var(--text-body);
+  text-transform: uppercase;
+}
+
+.link-with-icon svg,
+.link-with-icon img {
+  width: 20px;
+  height: 20px;
+}

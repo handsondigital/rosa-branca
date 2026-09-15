@@ -1,0 +1,142 @@
+.site-footer {
+  background: var(--color-brand-blue);
+  color: var(--color-white);
+  padding-block: 50px;
+}
+
+/* Same min() formula as .container / .site-header (base.css) — a fixed
+   padding on .site-footer + a separate max-width on the grid (the previous
+   approach) only matched the header at ≥1440px viewport; below that the
+   grid was narrower than the header instead of aligning with it. */
+.site-footer__grid {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 37px;
+  max-width: min(1240px, calc(100% - (var(--container-padding) * 2)));
+  margin-inline: auto;
+}
+
+.site-footer__brand {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 490px;
+  max-width: 100%;
+}
+
+.site-footer__brand svg {
+  width: 184px;
+  height: auto;
+}
+
+/* Figma's text layer has this paragraph typed twice in one text block
+   (blank line between, not a deliberate flex-gap design value) — a nested
+   column keeps that tight blank-line spacing separate from the 20px gap
+   the logo needs above it. Text box itself is 393px wide (node 607:1901),
+   narrower than the 490px brand column — capped, not stretched to fill it —
+   but still shrinks to 100% on narrow viewports. */
+.site-footer__brand-text {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  max-width: 393px;
+  width: 100%;
+}
+
+.site-footer__brand p {
+  font-size: var(--text-body);
+  line-height: 1.6;
+}
+
+/*
+ * No margin here — spacing after a heading is handled entirely by the
+ * parent's flex `gap` (20px, confirmed via Figma metadata on both the Menu
+ * and Contato columns) so it doesn't double up with that gap. Having both
+ * a margin here AND a parent gap was stacking to 35–40px in the old markup
+ * instead of the real 20px.
+ */
+.site-footer__heading {
+  font-family: var(--font-heading);
+
+  /* No explicit weight here rendered as regular (400) — Montserrat 400 was
+     never self-hosted, so this silently fell back to the system font.
+     Every other non-heading Montserrat usage in this codebase (nav links,
+     card eyebrows, section titles) is 500; matching that here. Not verified
+     against Figma directly (MCP rate-limited when this was found) — worth
+     a quick visual confirmation once quota resets. */
+  font-weight: 500;
+  font-size: 22px;
+}
+
+.site-footer__menu {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 381px;
+  max-width: 100%;
+}
+
+.site-footer__menu-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.site-footer__menu-list a {
+  font-size: var(--text-body);
+}
+
+.site-footer__contact {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 287px;
+  max-width: 100%;
+}
+
+.site-footer__contact-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: var(--text-body);
+}
+
+.site-footer__contact-item svg {
+  width: 25px;
+  height: 25px;
+}
+
+.site-footer__social {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.site-footer__social svg {
+  width: auto;
+  height: 25px;
+}
+
+.site-footer__partner svg {
+  height: 34px;
+  width: auto;
+}
+
+.site-footer__disclaimer {
+  background: var(--color-brand-blue-dark);
+  padding: 20px var(--container-padding);
+}
+
+.site-footer__disclaimer p {
+  text-align: center;
+  color: var(--color-white);
+  font-size: var(--text-small);
+}
+
+@media (max-width: 1023px) {
+  .site-footer__grid {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

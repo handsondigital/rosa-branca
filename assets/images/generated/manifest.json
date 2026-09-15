@@ -1,0 +1,366 @@
+{
+  "banner-home": {
+    "width": 1672,
+    "height": 941,
+    "alpha": false,
+    "sizes": "100vw",
+    "formats": {
+      "avif": [
+        {
+          "width": 640,
+          "file": "banner-home-640.avif"
+        },
+        {
+          "width": 960,
+          "file": "banner-home-960.avif"
+        },
+        {
+          "width": 1440,
+          "file": "banner-home-1440.avif"
+        }
+      ],
+      "webp": [
+        {
+          "width": 640,
+          "file": "banner-home-640.webp"
+        },
+        {
+          "width": 960,
+          "file": "banner-home-960.webp"
+        },
+        {
+          "width": 1440,
+          "file": "banner-home-1440.webp"
+        }
+      ],
+      "fallback": [
+        {
+          "width": 640,
+          "file": "banner-home-640.jpg"
+        },
+        {
+          "width": 960,
+          "file": "banner-home-960.jpg"
+        },
+        {
+          "width": 1440,
+          "file": "banner-home-1440.jpg"
+        }
+      ]
+    }
+  },
+  "foto-trigo-farinha": {
+    "width": 1672,
+    "height": 941,
+    "alpha": false,
+    "sizes": "100vw",
+    "formats": {
+      "avif": [
+        {
+          "width": 640,
+          "file": "foto-trigo-farinha-640.avif"
+        },
+        {
+          "width": 960,
+          "file": "foto-trigo-farinha-960.avif"
+        },
+        {
+          "width": 1440,
+          "file": "foto-trigo-farinha-1440.avif"
+        }
+      ],
+      "webp": [
+        {
+          "width": 640,
+          "file": "foto-trigo-farinha-640.webp"
+        },
+        {
+          "width": 960,
+          "file": "foto-trigo-farinha-960.webp"
+        },
+        {
+          "width": 1440,
+          "file": "foto-trigo-farinha-1440.webp"
+        }
+      ],
+      "fallback": [
+        {
+          "width": 640,
+          "file": "foto-trigo-farinha-640.jpg"
+        },
+        {
+          "width": 960,
+          "file": "foto-trigo-farinha-960.jpg"
+        },
+        {
+          "width": 1440,
+          "file": "foto-trigo-farinha-1440.jpg"
+        }
+      ]
+    }
+  },
+  "encontre-rosa-branca-bg": {
+    "width": 4096,
+    "height": 2336,
+    "alpha": false,
+    "sizes": "100vw",
+    "formats": {
+      "avif": [
+        {
+          "width": 640,
+          "file": "encontre-rosa-branca-bg-640.avif"
+        },
+        {
+          "width": 960,
+          "file": "encontre-rosa-branca-bg-960.avif"
+        },
+        {
+          "width": 1440,
+          "file": "encontre-rosa-branca-bg-1440.avif"
+        },
+        {
+          "width": 1920,
+          "file": "encontre-rosa-branca-bg-1920.avif"
+        },
+        {
+          "width": 2560,
+          "file": "encontre-rosa-branca-bg-2560.avif"
+        }
+      ],
+      "webp": [
+        {
+          "width": 640,
+          "file": "encontre-rosa-branca-bg-640.webp"
+        },
+        {
+          "width": 960,
+          "file": "encontre-rosa-branca-bg-960.webp"
+        },
+        {
+          "width": 1440,
+          "file": "encontre-rosa-branca-bg-1440.webp"
+        },
+        {
+          "width": 1920,
+          "file": "encontre-rosa-branca-bg-1920.webp"
+        },
+        {
+          "width": 2560,
+          "file": "encontre-rosa-branca-bg-2560.webp"
+        }
+      ],
+      "fallback": [
+        {
+          "width": 640,
+          "file": "encontre-rosa-branca-bg-640.jpg"
+        },
+        {
+          "width": 960,
+          "file": "encontre-rosa-branca-bg-960.jpg"
+        },
+        {
+          "width": 1440,
+          "file": "encontre-rosa-branca-bg-1440.jpg"
+        },
+        {
+          "width": 1920,
+          "file": "encontre-rosa-branca-bg-1920.jpg"
+        },
+        {
+          "width": 2560,
+          "file": "encontre-rosa-branca-bg-2560.jpg"
+        }
+      ]
+    }
+  },
+  "foto-sobre-a-marca": {
+    "width": 1672,
+    "height": 941,
+    "alpha": false,
+    "sizes": "(max-width: 767px) 100vw, 706px",
+    "formats": {
+      "avif": [
+        {
+          "width": 706,
+          "file": "foto-sobre-a-marca-706.avif"
+        },
+        {
+          "width": 1412,
+          "file": "foto-sobre-a-marca-1412.avif"
+        }
+      ],
+      "webp": [
+        {
+          "width": 706,
+          "file": "foto-sobre-a-marca-706.webp"
+        },
+        {
+          "width": 1412,
+          "file": "foto-sobre-a-marca-1412.webp"
+        }
+      ],
+      "fallback": [
+        {
+          "width": 706,
+          "file": "foto-sobre-a-marca-706.jpg"
+        },
+        {
+          "width": 1412,
+          "file": "foto-sobre-a-marca-1412.jpg"
+        }
+      ]
+    }
+  },
+  "recipe-card-placeholder": {
+    "width": 1254,
+    "height": 1254,
+    "alpha": false,
+    "sizes": "(max-width: 430px) 100vw, 380px",
+    "formats": {
+      "avif": [
+        {
+          "width": 380,
+          "file": "recipe-card-placeholder-380.avif"
+        },
+        {
+          "width": 760,
+          "file": "recipe-card-placeholder-760.avif"
+        }
+      ],
+      "webp": [
+        {
+          "width": 380,
+          "file": "recipe-card-placeholder-380.webp"
+        },
+        {
+          "width": 760,
+          "file": "recipe-card-placeholder-760.webp"
+        }
+      ],
+      "fallback": [
+        {
+          "width": 380,
+          "file": "recipe-card-placeholder-380.jpg"
+        },
+        {
+          "width": 760,
+          "file": "recipe-card-placeholder-760.jpg"
+        }
+      ]
+    }
+  },
+  "farinha-home-1": {
+    "width": 1232,
+    "height": 1277,
+    "alpha": true,
+    "sizes": "(max-width: 400px) 100vw, 322px",
+    "formats": {
+      "avif": [
+        {
+          "width": 322,
+          "file": "farinha-home-1-322.avif"
+        },
+        {
+          "width": 644,
+          "file": "farinha-home-1-644.avif"
+        }
+      ],
+      "webp": [
+        {
+          "width": 322,
+          "file": "farinha-home-1-322.webp"
+        },
+        {
+          "width": 644,
+          "file": "farinha-home-1-644.webp"
+        }
+      ],
+      "fallback": [
+        {
+          "width": 322,
+          "file": "farinha-home-1-322.png"
+        },
+        {
+          "width": 644,
+          "file": "farinha-home-1-644.png"
+        }
+      ]
+    }
+  },
+  "farinha-home-2": {
+    "width": 1232,
+    "height": 1277,
+    "alpha": true,
+    "sizes": "(max-width: 400px) 100vw, 322px",
+    "formats": {
+      "avif": [
+        {
+          "width": 322,
+          "file": "farinha-home-2-322.avif"
+        },
+        {
+          "width": 644,
+          "file": "farinha-home-2-644.avif"
+        }
+      ],
+      "webp": [
+        {
+          "width": 322,
+          "file": "farinha-home-2-322.webp"
+        },
+        {
+          "width": 644,
+          "file": "farinha-home-2-644.webp"
+        }
+      ],
+      "fallback": [
+        {
+          "width": 322,
+          "file": "farinha-home-2-322.png"
+        },
+        {
+          "width": 644,
+          "file": "farinha-home-2-644.png"
+        }
+      ]
+    }
+  },
+  "farinha-home-3": {
+    "width": 1232,
+    "height": 1277,
+    "alpha": true,
+    "sizes": "(max-width: 400px) 100vw, 322px",
+    "formats": {
+      "avif": [
+        {
+          "width": 322,
+          "file": "farinha-home-3-322.avif"
+        },
+        {
+          "width": 644,
+          "file": "farinha-home-3-644.avif"
+        }
+      ],
+      "webp": [
+        {
+          "width": 322,
+          "file": "farinha-home-3-322.webp"
+        },
+        {
+          "width": 644,
+          "file": "farinha-home-3-644.webp"
+        }
+      ],
+      "fallback": [
+        {
+          "width": 322,
+          "file": "farinha-home-3-322.png"
+        },
+        {
+          "width": 644,
+          "file": "farinha-home-3-644.png"
+        }
+      ]
+    }
+  }
+}

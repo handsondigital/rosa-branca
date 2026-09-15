@@ -1,0 +1,115 @@
+/* Recipe card ("Caixa de Receita") */
+.recipe-card {
+  display: flex;
+  flex-direction: column;
+  width: 380px;
+  max-width: 100%;
+  background: var(--color-white);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+  overflow: hidden;
+}
+
+.recipe-card__media {
+  height: 300px;
+  overflow: hidden;
+}
+
+.recipe-card__media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.recipe-card__body {
+  padding: 30px;
+}
+
+.recipe-card__eyebrow {
+  display: block;
+  margin-bottom: 8px;
+  font-family: var(--font-heading);
+  font-weight: 500;
+  font-size: var(--text-body);
+  letter-spacing: 2.7px;
+  text-transform: uppercase;
+  color: var(--color-brand-blue);
+}
+
+.recipe-card__title {
+  margin-bottom: 20px;
+  font-size: var(--text-card-title);
+  color: var(--color-brand-blue-dark);
+}
+
+.recipe-card__description {
+  margin-bottom: 20px;
+  color: var(--color-gray-600);
+  font-size: var(--text-body);
+}
+
+.recipe-card__meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--color-gray-500);
+  font-size: var(--text-xs);
+}
+
+.recipe-card__meta-divider {
+  width: 1px;
+  height: 21px;
+  background: var(--color-gray-300);
+}
+
+/* Contact detail card ("Detalhe do Contato") */
+.contact-detail {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  padding: 20px 30px;
+  background: var(--color-gray-100);
+  border: 0.5px solid var(--color-gray-300);
+  border-radius: 5px;
+  width: 100%;
+}
+
+.contact-detail__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  background: var(--color-brand-blue-light);
+}
+
+.contact-detail__icon svg {
+  width: 30px;
+  height: 30px;
+}
+
+.contact-detail__title {
+  font-size: var(--text-detail-title);
+  color: var(--color-heading-blue);
+  margin-bottom: 2px;
+}
+
+.contact-detail__text {
+  display: block;
+  color: var(--color-gray-400);
+  font-size: var(--text-body);
+  line-height: 28px;
+}
+
+/* Tag / pill badge */
+.tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 8px 10px;
+  border: var(--border-width-sm) solid var(--color-brand-blue);
+  border-radius: var(--radius-full);
+  color: var(--color-brand-blue);
+  font-size: var(--text-xs);
+}

@@ -1,0 +1,155 @@
+.site-header {
+  position: absolute;
+  top: 30px;
+  left: 0;
+  right: 0;
+
+  /* Same min() formula as .container (base.css) — keeps the header aligned
+     with every other capped section at all viewport widths, not just 1440px. */
+  max-width: min(1240px, calc(100% - (var(--container-padding) * 2)));
+  margin-inline: auto;
+  z-index: 40;
+}
+
+.main-menu {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  height: 84px;
+  padding: 0 20px;
+  background: var(--color-white);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-header);
+}
+
+.main-menu__logo {
+  display: flex;
+}
+
+.main-menu__logo svg {
+  width: 149px;
+  height: auto;
+}
+
+.main-menu__nav {
+  display: none;
+}
+
+/* Figma: nav item frames sit flush against each other with 0 gap (confirmed
+   via metadata — e.g. "Home" ends at x=403, "Sobre a Marca" starts at
+   x=403); the visual spacing comes entirely from each item's own 20px
+   padding below, not a flex gap. */
+.main-menu__list {
+  display: flex;
+  align-items: center;
+  gap: 0;
+}
+
+.main-menu__link {
+  display: inline-flex;
+  padding: 10px 20px;
+  font-family: var(--font-heading);
+  font-weight: 500;
+  font-size: var(--text-nav);
+  color: var(--color-brand-blue);
+  border-radius: var(--radius-sm);
+}
+
+.main-menu__link:hover,
+.main-menu__link:focus-visible {
+  background: var(--color-gray-100);
+}
+
+.main-menu__link[aria-current="page"] {
+  font-weight: 700;
+}
+
+.main-menu__actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  /* Below the nav breakpoint .main-menu__nav is display:none (not a flex
+     item at all), leaving logo + actions as the only two — this is what
+     pushes actions (search + hamburger) to the right edge. At the nav
+     breakpoint this gets cancelled in favor of nav's own margin-left:auto,
+     so nav and actions move together as one group instead. */
+  margin-left: auto;
+}
+
+/* Figma metadata (node 579:1527 → "Search" frame): the icon itself is
+   50×50px, not a small glyph in a larger hit target. */
+.main-menu__search {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 50px;
+  height: 50px;
+}
+
+.mobile-menu__toggle {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  width: 44px;
+  height: 44px;
+}
+
+.main-menu__search svg {
+  /* Global reset (base.css: img, svg { max-width: 100%; height: auto; })
+     caps this icon against its flex-item box instead of its own intrinsic
+     50x50 size — overriding it here pins the icon at its real size. */
+  max-width: none;
+  width: 50px;
+  height: 50px;
+}
+
+.mobile-menu__toggle span {
+  display: block;
+  width: 22px;
+  height: 2px;
+  background: var(--color-brand-blue);
+}
+
+.mobile-menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  right: 0;
+  background: var(--color-white);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-photo);
+  overflow: hidden;
+}
+
+.mobile-menu[hidden] {
+  display: none;
+}
+
+.mobile-menu__link {
+  display: block;
+  padding: 16px 30px;
+  font-size: 22px;
+  color: var(--color-brand-blue-dark);
+}
+
+.mobile-menu__link + .mobile-menu__link {
+  border-top: 1px solid var(--color-gray-100);
+}
+
+@media (min-width: 1024px) {
+  .main-menu__nav {
+    display: block;
+    margin-left: auto;
+  }
+
+  .main-menu__actions {
+    margin-left: 0;
+  }
+
+  .mobile-menu__toggle {
+    display: none;
+  }
+}

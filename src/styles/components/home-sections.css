@@ -1,0 +1,268 @@
+.home-section {
+  padding-block: 80px;
+}
+
+/* Grid/flex items default to min-width:auto, which lets the carousel's flex
+   track (sized to fit all slides) blow out its column instead of respecting
+   it and scrolling internally — min-width:0 restores normal shrinking.
+   Declared before the more specific .home-section__grid rules below (not
+   after) so source order matches how the cascade actually resolves this —
+   the compound selectors win on specificity either way, but there's no
+   property overlap between them (basis vs. min-width) for it to matter. */
+.home-section__media,
+.home-section__content {
+  min-width: 0;
+}
+
+/* "Sobre a Marca": photo (706px) and text column (~518px) are not an even
+   50/50 split in the Figma frame — flex-basis mirrors the real proportion. */
+.home-section__grid {
+  display: flex;
+  align-items: center;
+  gap: 48px;
+}
+
+.home-section__grid .home-section__media {
+  flex: 1 1 706px;
+}
+
+.home-section__grid .home-section__content {
+  flex: 1 1 518px;
+}
+
+/*
+ * Bleed variant: per the real Figma coordinates (Home, frame 2:6), the
+ * Recipes and Products rows are NOT a symmetric centered two-column grid —
+ * their media block runs edge-to-edge to alternating sides of the viewport
+ * (left: 0→910px, right: 530→1440px) while only the text column keeps the
+ * standard page gutter. Only "Sobre a Marca" uses the plain centered
+ * .home-section__grid above (photo/text both sit inside the 100px gutter).
+ */
+.home-section--bleed .home-section__row {
+  display: flex;
+  align-items: center;
+  gap: 50px;
+}
+
+/*
+ * Recipes (bleed-left): widened from the raw Figma frame's 910px so ~2.5
+ * cards peek through (380px card + 50px gap each — confirmed via Figma
+ * metadata: cards sit at x=100/530, i.e. 480→530 = 50px gap, not 30) instead
+ * of a thin ~90px sliver — per explicit visual correction. Still bleeds to
+ * the true viewport edge (not capped at 1240) — matches the raw Figma
+ * coordinates (media block: 0→910px) and hasn't been contested.
+ * Fixed px flex-basis (not %): the row's own padding-right (below) eats
+ * into its content-box width, so a percentage would resolve against
+ * (viewport - 100px) instead of the real 1440px frame.
+ */
+.home-section--bleed-left .home-section__media {
+  flex: 1 1 1010px;
+}
+
+.home-section--bleed-left .home-section__content {
+  flex: 1 1 280px;
+  max-width: 380px;
+}
+
+.home-section--bleed-left .home-section__row {
+  padding-right: var(--container-padding);
+}
+
+/*
+ * Products (bleed-right): per Figma metadata (frame 762:3827), media is
+ * exactly 910px with the 3 images touching edge-to-edge (0/322/644, no
+ * gap) — the 3rd is genuinely ~82% visible/18% cropped in the source file
+ * itself, not a bug. Unlike Recipes, this row is explicitly capped at the
+ * 1240px grid (not bled to the true viewport edge) — min() formula matches
+ * .container/.site-header (base.css). 910 (media) + 50 (row gap) + 280
+ * (content) = 1240 exactly.
+ */
+.home-section--bleed-right .home-section__row {
+  max-width: min(1240px, calc(100% - (var(--container-padding) * 2)));
+  margin-inline: auto;
+}
+
+.home-section--bleed-right .home-section__media {
+  flex: 1 1 910px;
+}
+
+.home-section--bleed-right .home-section__content {
+  flex: 1 1 280px;
+  max-width: 380px;
+}
+
+.home-section__title {
+  font-size: var(--text-h2);
+  color: var(--color-heading-blue);
+  margin-bottom: 20px;
+}
+
+.home-section__text {
+  color: var(--color-gray-600);
+  line-height: 28px;
+  margin-bottom: 24px;
+}
+
+/* Portal target for the Carousel's pagination dots — per Figma these sit in
+   the text column, under the CTA button, not next to the arrows (which stay
+   with the media). See Carousel.jsx's dotsTarget / createPortal. */
+.home-section__content .carousel__dots {
+  margin-top: 30px;
+}
+
+/*
+ * The source photo is a 1672×941 landscape shot — `height:auto` just uses
+ * that native ratio (confirmed live: rendered at 1.777 instead of the
+ * intended 1.243), ignoring the width/height HTML attributes entirely
+ * once CSS sets its own width. An explicit aspect-ratio locks the box to
+ * Figma's real 706×568 crop; object-fit:cover then crops the wider source
+ * photo to fill it instead of stretching/using the wrong ratio.
+ */
+.home-about__photo {
+  width: 100%;
+  aspect-ratio: 706 / 568;
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-photo);
+  object-fit: cover;
+}
+
+/* No-JS fallback: these containers scroll natively via CSS scroll-snap even
+   before the Carousel island mounts (or if it never does — see carousel.css
+   for the enhanced version React swaps in). */
+.home-recipes__carousel,
+.home-products__carousel {
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+}
+
+.home-recipes__carousel {
+  gap: 50px;
+}
+
+.home-products__carousel {
+  gap: 0;
+}
+
+.home-recipes__carousel > *,
+.home-products__carousel > * {
+  scroll-snap-align: start;
+  flex-shrink: 0;
+}
+
+.home-products__item img {
+  width: 322px;
+  max-width: 100%;
+  height: 450px;
+  object-fit: cover;
+  border-radius: var(--radius-md);
+}
+
+/* "Encontre Rosa Branca" search banner */
+.home-find-us {
+  position: relative;
+  padding: 100px;
+  overflow: hidden;
+}
+
+.home-find-us__bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.home-find-us__card {
+  position: relative;
+  max-width: 1239px;
+  background: rgb(255 255 255 / 70%);
+  border-radius: var(--radius-lg);
+  padding: 50px 37px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 25px;
+  text-align: center;
+}
+
+.home-find-us__title {
+  font-size: var(--text-h2);
+  color: var(--color-brand-blue-dark);
+}
+
+.home-find-us__subtitle {
+  font-family: var(--font-heading);
+  font-weight: 500;
+  font-size: 22px;
+  color: var(--color-gray-900);
+}
+
+.home-find-us__search {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  background: var(--color-white);
+  border-radius: var(--radius-full);
+  padding-left: 30px;
+}
+
+.home-find-us__input {
+  flex: 1;
+  border: none;
+  padding: 20px 0;
+  font-family: var(--font-heading);
+
+  /* Same missing-weight issue as .site-footer__heading (footer.css) —
+     matching the established Montserrat-500 convention used everywhere
+     else this font appears outside headings. */
+  font-weight: 500;
+  font-size: var(--text-body);
+  color: var(--color-gray-900);
+}
+
+.home-find-us__input::placeholder {
+  color: var(--color-gray-400);
+}
+
+.home-find-us__submit {
+  flex-shrink: 0;
+}
+
+@media (max-width: 1023px) {
+  .home-section {
+    padding-block: 50px;
+  }
+
+  .home-section__grid {
+    flex-direction: column;
+    gap: 30px;
+  }
+
+  .home-section__grid .home-section__media,
+  .home-section__grid .home-section__content {
+    flex: 1 1 auto;
+    width: 100%;
+  }
+
+  .home-section--bleed .home-section__row {
+    flex-direction: column;
+    gap: 30px;
+    padding-inline: var(--container-padding);
+  }
+
+  .home-section--bleed .home-section__media,
+  .home-section--bleed .home-section__content {
+    flex: 1 1 auto;
+    width: 100%;
+  }
+
+  .home-find-us {
+    padding: 50px 30px;
+  }
+
+  .home-find-us__card {
+    padding: 30px 20px;
+  }
+}

@@ -1,0 +1,93 @@
+.home-hero {
+  position: relative;
+}
+
+.home-hero__slide {
+  position: relative;
+  height: 768px;
+  max-height: 90vh;
+}
+
+/* No-JS / pre-mount fallback: unlike the recipes/products carousels (whose
+   raw children already form a same-height horizontal row via
+   display:flex — see home-sections.css), the hero has 5 duplicated
+   full-height slides with no such constraint, so before Carousel.jsx
+   mounts they simply stack in normal flow (5 x 630px = 3150px tall on
+   mobile instead of 630px). That's not a cosmetic quirk — it's an actual,
+   measured Lighthouse CLS bug: everything below the hero briefly renders
+   ~2500px lower, then jumps up the moment React collapses it to one
+   slide. Hiding the non-first slides upfront makes the SSR fallback's
+   height match the mounted carousel's from the very first paint; React's
+   mount replaces this whole container anyway; so this rule never
+   conflicts with the real (all-slides-present) Embla markup. Declared
+   after the plain .home-hero__slide rule above (not before) so source
+   order and cascade specificity both agree, even though this compound
+   selector would win regardless — keeps the stylesheet's read order
+   matching how the cascade actually resolves it. */
+.home-hero__carousel .home-hero__slide:not(:first-child) {
+  display: none;
+}
+
+.home-hero__image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.home-hero__slide::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, rgb(255 255 255 / 88%) 0%, rgb(255 255 255 / 55%) 45%, rgb(255 255 255 / 0%) 70%);
+}
+
+/* Same min() formula as .container / .site-header (base.css) — keeps the
+   hero text aligned with the header at every viewport width. */
+.home-hero__container {
+  position: relative;
+  height: 100%;
+  max-width: min(1240px, calc(100% - (var(--container-padding) * 2)));
+  margin-inline: auto;
+}
+
+.home-hero__content {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 24px;
+  max-width: 496px;
+}
+
+.home-hero__title {
+  font-size: var(--text-hero);
+  color: var(--color-heading-blue);
+}
+
+.home-hero__text {
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: var(--text-body-lg);
+  line-height: 36px;
+  color: var(--color-gray-900);
+}
+
+.home-hero__content .btn {
+  align-self: flex-start;
+}
+
+@media (max-width: 767px) {
+  .home-hero__slide {
+    height: 630px;
+  }
+
+  .home-hero__content {
+    max-width: 100%;
+  }
+
+  .home-hero__slide::before {
+    background: linear-gradient(180deg, rgb(255 255 255 / 90%) 0%, rgb(255 255 255 / 75%) 55%, rgb(255 255 255 / 15%) 100%);
+  }
+}
