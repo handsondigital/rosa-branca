@@ -61,6 +61,23 @@
   max-width: 496px;
 }
 
+/* Desktop (>=1024px, where .site-header shows its full pill nav — see
+   header.css): title sits a fixed 152px below the header's bottom edge
+   per Figma, not vertically centered in the slide — centering only landed
+   there by coincidence for this exact copy length, and shifts with any
+   text-length change. .site-header is `position: absolute; top: 30px`
+   with a fixed 84px-tall .main-menu (header.css, no breakpoint override),
+   so its bottom edge is always 114px from the slide top regardless of
+   viewport width: 114 + 152 = 266px padding-top pins the title exactly
+   152px under the header at every desktop width, not just one reference
+   viewport. */
+@media (min-width: 1024px) {
+  .home-hero__content {
+    justify-content: flex-start;
+    padding-top: 266px;
+  }
+}
+
 .home-hero__title {
   /* Declared here (not left to the base h1-h4 tag reset in base.css) on
      purpose: only the first hero slide is a real <h1> (one per page, for
