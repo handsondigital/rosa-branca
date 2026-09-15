@@ -177,6 +177,10 @@
 @media (min-width: 1024px) {
   .home-section--bleed-left .carousel--peek .carousel__track {
     margin-left: clamp(-330px, calc(100vw - var(--container-gutter-vw) - 1670px), 0px);
+
+    /* Per explicit request, desktop only — fixes a visual issue with the
+       cards' bottom edge inside the track. */
+    margin-bottom: 15px;
   }
 }
 
