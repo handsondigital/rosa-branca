@@ -14,7 +14,7 @@ $rosa_branca_products = array(
 	array( 'image' => 'farinha-home-3', 'alt' => __( 'Farinha de trigo Rosa Branca integral', 'rosa-branca' ) ),
 );
 ?>
-<section class="home-section home-section--bleed home-section--bleed-right">
+<section class="home-section home-section--bleed home-section--bleed-right" data-reveal>
 	<div class="home-section__row">
 		<div class="home-section__content">
 			<h2 class="home-section__title"><?php esc_html_e( 'Lorem ipsum dolor sit amet', 'rosa-branca' ); ?></h2>

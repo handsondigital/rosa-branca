@@ -1,0 +1,25 @@
+/* [data-reveal] sections fade + rise in as they enter the viewport
+   (scroll-reveal.js). The hidden state only exists under .has-scroll-reveal
+   — a class the JS module adds to <html> itself on mount — so without JS
+   (or with prefers-reduced-motion/no IntersectionObserver support, where
+   the module returns early and never adds the class) every section stays
+   at its plain, fully-visible default below. This is the same
+   progressive-enhancement shape as .mobile-menu/.main-menu__search-form
+   (header.css): the "hidden" visual state is applied by JS, never baked
+   into the element's own default CSS. */
+[data-reveal] {
+  opacity: 1;
+  transform: none;
+}
+
+.has-scroll-reveal [data-reveal] {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: var(--transition-reveal);
+  will-change: opacity, transform;
+}
+
+.has-scroll-reveal [data-reveal].is-revealed {
+  opacity: 1;
+  transform: translateY(0);
+}

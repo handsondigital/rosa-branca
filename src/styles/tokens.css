@@ -73,6 +73,12 @@
      pass per frame regardless of how many panels use it. */
   --transition-panel: opacity 0.18s ease-out, transform 0.18s ease-out;
 
+  /* Section fade/rise-in on scroll (scroll-reveal.css + scroll-reveal.js) —
+     slower than --transition-panel above since it's a one-shot per-section
+     reveal, not a repeatedly toggled UI panel; still opacity + transform
+     only, so it stays compositor-only regardless of duration. */
+  --transition-reveal: opacity 0.6s ease-out, transform 0.6s ease-out;
+
   /* Fonts (self-hosted @font-face declarations in fonts.css) */
   --font-heading: "Montserrat", "Helvetica Neue", arial, sans-serif;
   --font-body: "MADE Tommy Soft", "Helvetica Neue", arial, sans-serif;

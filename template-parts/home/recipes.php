@@ -29,7 +29,7 @@ $rosa_branca_recipe_card = array(
 );
 $rosa_branca_recipes = array_fill( 0, 3, $rosa_branca_recipe_card );
 ?>
-<section class="home-section home-section--bleed home-section--bleed-left">
+<section class="home-section home-section--bleed home-section--bleed-left" data-reveal>
 	<div class="home-section__row">
 		<div class="home-section__media">
 			<div

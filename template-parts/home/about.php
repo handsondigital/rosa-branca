@@ -8,7 +8,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 ?>
-<section class="home-section container">
+<section class="home-section container" data-reveal>
 	<div class="home-section__grid">
 		<div class="home-section__media">
 			<?php
