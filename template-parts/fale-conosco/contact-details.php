@@ -25,9 +25,9 @@ $rosa_branca_contact_details      = array(
 		<p><?php esc_html_e( 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse ut massa neque.', 'rosa-branca' ); ?></p>
 	</div>
 
-	<div class="contact-details__list">
+	<div class="contact-details__list" data-reveal-group>
 		<?php foreach ( $rosa_branca_contact_details as $detail ) : ?>
-			<div class="contact-detail">
+			<div class="contact-detail" data-reveal-item>
 				<span class="contact-detail__icon">
 					<?php rosa_branca_icon( $detail['icon'] ); ?>
 				</span>

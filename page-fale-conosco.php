@@ -15,7 +15,7 @@ get_header();
 
 <?php get_template_part( 'template-parts/fale-conosco/hero' ); ?>
 
-<section class="contact-section container" data-reveal>
+<section class="contact-section container">
 	<div class="contact-section__grid">
 		<?php get_template_part( 'template-parts/fale-conosco/form' ); ?>
 		<?php get_template_part( 'template-parts/fale-conosco/contact-details' ); ?>
