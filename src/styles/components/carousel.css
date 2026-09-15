@@ -45,7 +45,6 @@
    (home-sections.css) — which is exactly where arrows belong in both
    cases, with no need to special-case the placeholder itself. */
 .carousel__controls {
-  position: relative;
   display: flex;
   align-items: center;
   justify-content: space-between;

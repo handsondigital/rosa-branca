@@ -87,31 +87,6 @@
   padding-right: var(--container-gutter);
 }
 
-/* Per explicit request: with only 2 real dots (3 cards — see recipes.php's
-   own comment on why that's not padded to invent more) instead of the 5
-   Figma's static "Bullets" decoration shows, a 2-dot group flush against
-   .carousel__controls' inner edge (space-between's default behavior,
-   carousel.css) read as too small/off to one side. Centered under the
-   whole cards column instead: taken out of the flex flow so it no longer
-   competes with the arrows for space-between's two slots — .carousel__arrows
-   alone as the only remaining flex child still lands at the row's start
-   (its own margin-left, from the earlier gutter fix, is unaffected).
-   .carousel__controls' position:relative (carousel.css) is what this
-   left:50% resolves against. Products' dots are NOT touched — its own
-   position (inner edge, next to the button) was already fixed separately
-   and isn't part of this request.
-   Desktop only (>=1024px): below that the media column narrows enough
-   (single-card mobile view) that centering under its full width lands
-   the dots directly on top of the arrows instead — confirmed live, a
-   real regression the unscoped version introduced at 390px. */
-@media (min-width: 1024px) {
-  .home-section--bleed-left .carousel__dots {
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-  }
-}
-
 /*
  * Products (bleed-right): text column's left edge aligns with .container's
  * left edge via the same single-side gutter formula as bleed-left; media
