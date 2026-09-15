@@ -42,9 +42,38 @@ $rosa_branca_nav_items = array(
 		</nav>
 
 		<div class="main-menu__actions">
-			<button type="button" class="main-menu__search" aria-label="<?php esc_attr_e( 'Buscar', 'rosa-branca' ); ?>">
-				<?php rosa_branca_icon( 'search' ); ?>
-			</button>
+			<div class="main-menu__search-wrap">
+				<button
+					type="button"
+					class="main-menu__search"
+					aria-label="<?php esc_attr_e( 'Buscar', 'rosa-branca' ); ?>"
+					aria-expanded="false"
+					aria-controls="main-menu-search-form"
+					data-search-toggle
+				>
+					<?php rosa_branca_icon( 'search' ); ?>
+				</button>
+				<form
+					id="main-menu-search-form"
+					class="main-menu__search-form"
+					role="search"
+					method="get"
+					action="<?php echo esc_url( home_url( '/' ) ); ?>"
+					hidden
+				>
+					<label class="visually-hidden" for="main-menu-search-input"><?php esc_html_e( 'Buscar', 'rosa-branca' ); ?></label>
+					<input
+						type="search"
+						id="main-menu-search-input"
+						name="s"
+						class="main-menu__search-input"
+						placeholder="<?php esc_attr_e( 'Procurar', 'rosa-branca' ); ?>"
+					/>
+					<button type="submit" class="main-menu__search-submit" aria-label="<?php esc_attr_e( 'Buscar', 'rosa-branca' ); ?>">
+						<?php rosa_branca_icon( 'link-arrow' ); ?>
+					</button>
+				</form>
+			</div>
 			<button
 				type="button"
 				class="mobile-menu__toggle"

@@ -8,5 +8,7 @@ import "../styles/components/card.css";
 import "../styles/components/input.css";
 
 import { initMobileMenu } from "../js/mobile-menu.js";
+import { initMainMenuSearch } from "../js/main-menu-search.js";
 
 initMobileMenu();
+initMainMenuSearch();

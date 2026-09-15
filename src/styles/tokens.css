@@ -67,6 +67,12 @@
   --shadow-card: 0px 0px 15px rgb(0 0 0 / 16%);
   --shadow-photo: 0px 0px 7.5px rgb(0 0 0 / 16%);
 
+  /* Shared open/close transition for the animated-disclosure.js panels
+     (mobile menu, header search dropdown, ...) — opacity + transform only,
+     both compositor-only properties, so this never costs a layout/paint
+     pass per frame regardless of how many panels use it. */
+  --transition-panel: opacity 0.18s ease-out, transform 0.18s ease-out;
+
   /* Fonts (self-hosted @font-face declarations in fonts.css) */
   --font-heading: "Montserrat", "Helvetica Neue", arial, sans-serif;
   --font-body: "MADE Tommy Soft", "Helvetica Neue", arial, sans-serif;

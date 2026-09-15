@@ -48,17 +48,49 @@
 
 .main-menu__link {
   display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
   padding: 10px 20px;
   font-family: var(--font-heading);
   font-weight: 500;
   font-size: var(--text-nav);
   color: var(--color-brand-blue);
   border-radius: var(--radius-sm);
+  transition: color 0.2s ease;
+}
+
+/* Per Figma (node 588:831/832): hover doesn't change the background, it
+   swaps the text to a darker blue and reveals a 6px dot centered under it.
+   The dot is always in the layout (an ::after, not conditionally rendered)
+   so items don't change height on hover — only its opacity animates, kept
+   off the height/background properties that would otherwise force layout
+   or paint on every frame. */
+.main-menu__link::after {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: var(--radius-full);
+  background: var(--color-brand-blue-dark);
+  opacity: 0;
+  transition: opacity 0.2s ease;
 }
 
 .main-menu__link:hover,
 .main-menu__link:focus-visible {
-  background: var(--color-gray-100);
+  color: var(--color-brand-blue-dark);
+}
+
+.main-menu__link:hover::after,
+.main-menu__link:focus-visible::after {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .main-menu__link,
+  .main-menu__link::after {
+    transition: none;
+  }
 }
 
 .main-menu__link[aria-current="page"] {
@@ -78,6 +110,13 @@
   margin-left: auto;
 }
 
+/* Anchors the dropdown form below the search icon (position:relative on
+   just the icon's own 50×50 box, not the whole .main-menu__actions group)
+   — see .main-menu__search-form's `right: 0` below. */
+.main-menu__search-wrap {
+  position: relative;
+}
+
 /* Figma metadata (node 579:1527 → "Search" frame): the icon itself is
    50×50px, not a small glyph in a larger hit target. */
 .main-menu__search {
@@ -86,6 +125,79 @@
   justify-content: center;
   width: 50px;
   height: 50px;
+}
+
+/* Per Figma (node 545:1919, "Estado=Aberto"): 320×60px, right-aligned
+   under the icon (29px below it — the icon is the form's own 50×50
+   containing block, so `top: calc(100% + 29px)` lands exactly there
+   regardless of viewport width). Opacity + transform only, same reasoning
+   as .mobile-menu (compositor-only, no layout/paint cost per frame) —
+   main-menu-search.js (via animated-disclosure.js) drives .is-open the
+   same way it drives .mobile-menu's. */
+.main-menu__search-form {
+  position: absolute;
+  top: calc(100% + 29px);
+  right: 0;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  width: 320px;
+  height: 60px;
+  background: var(--color-white);
+  border: 1px solid var(--color-brand-blue-dark);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  transform-origin: top right;
+  opacity: 0;
+  transform: translateY(-8px);
+  transition: var(--transition-panel);
+}
+
+.main-menu__search-form[hidden] {
+  display: none;
+}
+
+.main-menu__search-form.is-open {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .main-menu__search-form {
+    transition: none;
+  }
+}
+
+.main-menu__search-input {
+  flex: 1;
+  height: 100%;
+  min-width: 0;
+  border: none;
+  padding-left: 20px;
+  font-family: var(--font-heading);
+  font-weight: 500;
+  font-size: var(--text-nav);
+  color: var(--color-brand-blue-dark);
+}
+
+.main-menu__search-input::placeholder {
+  color: var(--color-brand-blue-dark);
+}
+
+.main-menu__search-submit {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 58px;
+  height: 100%;
+  background: var(--color-brand-blue-light);
+}
+
+.main-menu__search-submit svg {
+  width: 25px;
+  height: 25px;
+  color: var(--color-brand-blue-dark);
 }
 
 .mobile-menu__toggle {
@@ -150,7 +262,7 @@
      actually transitions instead of snapping straight to the open state. */
   opacity: 0;
   transform: translateY(-8px) scale(0.98);
-  transition: opacity 0.18s ease-out, transform 0.18s ease-out;
+  transition: var(--transition-panel);
 }
 
 .mobile-menu[hidden] {
