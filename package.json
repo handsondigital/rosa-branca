@@ -12,10 +12,11 @@
     "build:images": "node scripts/build-images.mjs",
     "build:fonts": "node scripts/convert-fonts.mjs",
     "lighthouse": "node scripts/lighthouse.mjs",
-    "lint": "npm run lint:js && npm run lint:css && npm run lint:fonts",
+    "lint": "npm run lint:js && npm run lint:css && npm run lint:fonts && npm run lint:css-dedupe",
     "lint:js": "eslint .",
     "lint:css": "stylelint \"src/styles/**/*.css\"",
-    "lint:fonts": "node scripts/lint-fonts.mjs"
+    "lint:fonts": "node scripts/lint-fonts.mjs",
+    "lint:css-dedupe": "node scripts/lint-css-dedupe.mjs"
   },
   "dependencies": {
     "embla-carousel-autoplay": "^8.6.0",
@@ -33,6 +34,7 @@
     "eslint-plugin-react-refresh": "^0.5.7",
     "globals": "^17.12.0",
     "lighthouse": "^12.8.2",
+    "postcss": "^8.5.28",
     "sharp": "^0.35.4",
     "stylelint": "^17.15.0",
     "stylelint-config-standard": "^40.0.0",
