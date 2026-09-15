@@ -132,6 +132,32 @@
   flex-direction: row-reverse;
 }
 
+/* Desktop only (>=1024px, where media actually bleeds past the viewport
+   edge — below that the row's own padding-inline, in the stacked-layout
+   media query further down, already insets both arrows and text equally,
+   so this would double it up). Arrows sit at the "outer" edge of the
+   controls row, which is the media block's own true-bled edge — but per
+   Figma (confirmed live: x=100 at the 1440px reference, not flush at the
+   viewport's x=0) they're meant to sit inset by the same gutter the rest
+   of the page aligns to, not glued to the true edge. --container-gutter-vw
+   (tokens.css), not the %-based --container-gutter: .carousel__arrows
+   sits deep enough in nested layout (inside .carousel__controls, inside
+   .home-section__media) that a %-based value would resolve against that
+   nesting's own (much narrower) containing block instead of the actual
+   viewport — same reasoning as the Recipes peek-offset formula
+   (carousel.css). justify-content:space-between on .carousel__controls
+   means this margin only moves the arrows themselves inward — the dots
+   at the other end, already correctly positioned, are unaffected. */
+@media (min-width: 1024px) {
+  .home-section--bleed-left .carousel__arrows {
+    margin-left: var(--container-gutter-vw);
+  }
+
+  .home-section--bleed-right .carousel__arrows {
+    margin-right: var(--container-gutter-vw);
+  }
+}
+
 .home-section__title {
   font-size: var(--text-h2);
   color: var(--color-heading-blue);
