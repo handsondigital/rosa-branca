@@ -1,5 +1,6 @@
 /* Recipe card ("Caixa de Receita") */
 .recipe-card {
+  position: relative; /* containing block for .recipe-card__link's stretched hit area */
   display: flex;
   flex-direction: column;
   width: 380px;
@@ -40,6 +41,23 @@
   margin-bottom: 20px;
   font-size: var(--text-card-title);
   color: var(--color-brand-blue-dark);
+}
+
+/* Only the title text is a real, properly-labelled link for assistive tech —
+   ::after stretches its hit area over the whole card (position: relative on
+   .recipe-card above) so clicking anywhere on the card, not just the title,
+   navigates. Whole-card <a> wrappers are the other common approach, but
+   that makes the link's accessible name the entire card's text (title +
+   excerpt + time + difficulty read out together), which is worse UX for
+   screen reader users than a link scoped to just the title. */
+.recipe-card__link {
+  display: block;
+}
+
+.recipe-card__link::after {
+  content: "";
+  position: absolute;
+  inset: 0;
 }
 
 .recipe-card__description {

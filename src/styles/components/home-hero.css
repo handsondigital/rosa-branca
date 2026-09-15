@@ -62,6 +62,14 @@
 }
 
 .home-hero__title {
+  /* Declared here (not left to the base h1-h4 tag reset in base.css) on
+     purpose: only the first hero slide is a real <h1> (one per page, for
+     SEO — see hero.php); the other slides reuse this same class on a <p>
+     so they look identical, but a <p> never gets the tag-based reset, so
+     it was silently falling back to the body font/weight instead of
+     matching the real heading. */
+  font-family: var(--font-heading);
+  font-weight: 700;
   font-size: var(--text-hero);
   color: var(--color-heading-blue);
 }

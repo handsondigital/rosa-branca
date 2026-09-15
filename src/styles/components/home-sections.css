@@ -189,6 +189,7 @@
 .home-find-us__title {
   font-size: var(--text-h2);
   color: var(--color-brand-blue-dark);
+  text-transform: uppercase;
 }
 
 .home-find-us__subtitle {

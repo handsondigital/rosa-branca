@@ -15,12 +15,17 @@ if ( ! defined( 'ABSPATH' ) ) {
 // click through, but that meant inventing 2 cards not present in Figma).
 // With only 3 cards and ~2.5 visible at once, "next" reaches the end after
 // one click — that's the real, correct behaviour for this exact content.
+// No per-recipe page/slug exists yet (individual recipe pages are out of
+// PAGES_PLAN.md's current scope, same as /receitas/ itself) — links to the
+// same /receitas/ URL as the section's own CTA button below, as a
+// placeholder destination until real recipe content/routing exists.
 $rosa_branca_recipe_card = array(
 	'eyebrow'    => __( 'receitas', 'rosa-branca' ),
 	'title'      => __( 'Lorem Ipsum Dolor', 'rosa-branca' ),
 	'excerpt'    => __( 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur congue condimentum erat, at accumsan risus rhoncus id.', 'rosa-branca' ),
 	'time'       => '2h 30min.',
 	'difficulty' => __( 'Fácil', 'rosa-branca' ),
+	'url'        => home_url( '/receitas/' ),
 );
 $rosa_branca_recipes = array_fill( 0, 3, $rosa_branca_recipe_card );
 ?>
@@ -44,7 +49,9 @@ $rosa_branca_recipes = array_fill( 0, 3, $rosa_branca_recipe_card );
 						</div>
 						<div class="recipe-card__body">
 							<span class="recipe-card__eyebrow"><?php esc_html_e( 'Receitas', 'rosa-branca' ); ?></span>
-							<h3 class="recipe-card__title"><?php echo esc_html( $recipe['title'] ); ?></h3>
+							<h3 class="recipe-card__title">
+								<a class="recipe-card__link" href="<?php echo esc_url( $recipe['url'] ); ?>"><?php echo esc_html( $recipe['title'] ); ?></a>
+							</h3>
 							<p class="recipe-card__description"><?php echo esc_html( $recipe['excerpt'] ); ?></p>
 							<div class="recipe-card__meta">
 								<?php rosa_branca_icon( 'clock' ); ?>

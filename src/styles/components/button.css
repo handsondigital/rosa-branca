@@ -36,7 +36,7 @@
 
 .btn--outline {
   background: var(--color-white);
-  color: var(--color-heading-blue);
+  color: var(--color-brand-blue);
   border: var(--border-width-md) solid var(--color-brand-blue);
   height: 60px;
   padding-inline: 48px;

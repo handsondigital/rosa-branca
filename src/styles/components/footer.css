@@ -46,7 +46,7 @@
 
 .site-footer__brand p {
   font-size: var(--text-body);
-  line-height: 1.6;
+  line-height: 25px;
 }
 
 /*
@@ -58,14 +58,7 @@
  */
 .site-footer__heading {
   font-family: var(--font-heading);
-
-  /* No explicit weight here rendered as regular (400) — Montserrat 400 was
-     never self-hosted, so this silently fell back to the system font.
-     Every other non-heading Montserrat usage in this codebase (nav links,
-     card eyebrows, section titles) is 500; matching that here. Not verified
-     against Figma directly (MCP rate-limited when this was found) — worth
-     a quick visual confirmation once quota resets. */
-  font-weight: 500;
+  font-weight: 700;
   font-size: 22px;
 }
 
@@ -80,7 +73,7 @@
 .site-footer__menu-list {
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 18px;
 }
 
 .site-footer__menu-list a {
