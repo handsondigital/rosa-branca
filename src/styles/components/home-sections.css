@@ -78,9 +78,32 @@
    content shouldn't flex at all here — media (already tolerant of
    shrinking, it bleeds past the viewport anyway) absorbs 100% of the
    squeeze instead, same principle as bleed-right's media below. */
+
 .home-section--bleed-left .home-section__content {
   width: 380px;
   flex-shrink: 0;
+}
+
+/* align-self overrides the row's align-items:center (above) for this item
+   only — per Figma (node 2:6): content sits 19px below the cards' own top
+   edge (867-848), not perfectly centered against them (which would be
+   ~32.5px — and ~81px live, against the media column's full height
+   including the controls row appended after the cards, which Figma's
+   layout doesn't even factor in the same way: text there is one
+   independently-placed block, not something centered against "cards +
+   controls combined"). .home-section__media's own top always equals the
+   cards' top (the carousel mount is media's first child), so this
+   margin-top lines up with that same reference point.
+   Desktop only (>=1024px): unscoped, this margin-top stacked on top of
+   the column-layout's own 30px row gap at narrower widths instead of
+   replacing anything there (confirmed live: 49px gap instead of 30px) —
+   below 1024px the row is flex-direction:column, where align-self would
+   also mean something entirely different (horizontal, not vertical). */
+@media (min-width: 1024px) {
+  .home-section--bleed-left .home-section__content {
+    align-self: flex-start;
+    margin-top: 19px;
+  }
 }
 
 .home-section--bleed-left .home-section__row {
