@@ -233,9 +233,28 @@
   .home-section--bleed-left .carousel__arrows {
     margin-left: var(--container-gutter-vw);
   }
+}
 
+/* Products' own arrows do NOT use the vw-based formula above: unlike
+   Recipes' media (flex:1 1 1010px, genuinely bleeds/grows with the
+   viewport), Products' media is `flex: 0 1 910px` (flex-grow:0) — it
+   NEVER grows past 910px at any desktop width, so its "true-bled edge"
+   isn't at the viewport edge (100vw) the way Recipes' is. A 100vw-based
+   margin there doesn't track the actual (fixed-width, gutter-shifted)
+   controls box at all: algebraically, media's right edge is
+   (--container-gutter + 1340px) at every width, so subtracting a
+   100vw-based margin left a CONSTANT absolute page position (reported
+   live: arrows frozen at the same x regardless of viewport, drifting
+   further from the actual cards as the row's own gutter — and hence
+   media's real position — grew) — only invisible at exactly the 1440px
+   reference width, where gutter/gutter-vw/container-padding all happen
+   to be the same 100px by construction. A plain --container-padding
+   margin is relative to the controls box's own edge (which already
+   correctly tracks media via the row's padding-left), so it stays
+   correct at every width without needing viewport math at all. */
+@media (min-width: 1024px) {
   .home-section--bleed-right .carousel__arrows {
-    margin-right: var(--container-gutter-vw);
+    margin-right: var(--container-padding);
   }
 }
 

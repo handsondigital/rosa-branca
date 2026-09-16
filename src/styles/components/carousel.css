@@ -150,33 +150,38 @@
    gap was considered and rejected — recipes.php already documents why
    fabricating cards the Figma source doesn't have was reverted once.
 
-   Fixed instead by making the shift responsive, clamped between two
-   already-validated bounds:
-   - -330px floor: never shift more than the empirically-safe amount from
-     the plain--330px version above (Embla's own scroll-bounds detection
+   Fixed instead by making the shift responsive:
+   - -330px floor (max() below): never shift more than the
+     empirically-safe amount (Embla's own scroll-bounds detection
      silently breaks past ~-343px — confirmed by testing every value from
      -320 to -345 live; see git history for that full derivation).
-   - 0px ceiling: never shift backwards/positive once the media column
-     alone grows wider than the 1240px of card content (~2100px+
-     viewport) — past that point there's nothing left to peek, cards just
-     render at their natural size with trailing empty space, which is a
-     content-runs-out problem no offset can paper over, not this one.
-   Between those bounds, the shift shrinks as the viewport (and hence
-   media's width) grows, keeping the visible window's right edge
-   pinned at the 3rd card's real right edge (zero gap) instead of
-   overshooting it. Derivation: media's width is (100vw - gutter - 430px)
-   — 430 = the 50px row gap + the text column's fixed 380px
-   (home-sections.css) — so the shift that exactly closes the gap is
-   1240 - that, i.e. (1670px + gutter - 100vw); --container-gutter-vw
-   (tokens.css) is used instead of --container-gutter here specifically
-   because this rule sits deep enough in nested layout that a %-based
-   value would resolve against the wrong containing block (see that
-   token's own comment). Verified at 1440px (unchanged from the flat
-   -330px version), 1920px (gap closed, confirmed live), and both
-   directions of Embla navigation still work at each. */
+   - No ceiling: an earlier version of this rule capped the shift at 0px
+     ("never shift positive, nothing left to peek past ~2100px") — that
+     reopened the exact gap it was meant to close, just moved from
+     "between card 3 and the text column" to nowhere useful, since 0px
+     only means "don't shift" — it doesn't mean "stay flush against the
+     text column." Removing the cap lets the same formula keep growing
+     positive past that point too, which turns out to still be exactly
+     the right value (see derivation below) — no separate "content ran
+     out" case needed, it was already the same math the whole time.
+   Derivation (same at every width, capped or not): media's width is
+   (100vw - gutter - 430px) — 430 = the 50px row gap + the text column's
+   fixed 380px (home-sections.css) — so the shift that exactly closes the
+   gap between the 3rd card and the text column is 1240 - that, i.e.
+   (1670px + gutter - 100vw). Positive past ~1770-1870px-ish (gutter-
+   dependent): instead of peeking the 1st card, it now keeps the 3rd
+   card's right edge flush against the text column, pushing the leftover
+   bled space to the true left edge instead (plain background there reads
+   as intentional breathing room, not a broken gap in the middle of real
+   content). --container-gutter-vw (tokens.css) is used instead of
+   --container-gutter here specifically because this rule sits deep
+   enough in nested layout that a %-based value would resolve against the
+   wrong containing block (see that token's own comment). Verified at
+   1440px (unchanged), 1920px and 2560px (gap closed at both, confirmed
+   live), and both directions of Embla navigation still work at each. */
 @media (min-width: 1024px) {
   .home-section--bleed-left .carousel--peek .carousel__track {
-    margin-left: clamp(-330px, calc(100vw - var(--container-gutter-vw) - 1670px), 0px);
+    margin-left: max(-330px, calc(100vw - var(--container-gutter-vw) - 1670px));
 
     /* Per explicit request, desktop only — fixes a visual issue with the
        cards' bottom edge inside the track. */
