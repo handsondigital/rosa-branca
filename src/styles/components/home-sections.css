@@ -352,6 +352,7 @@
 
 .home-find-us__input {
   flex: 1;
+  min-width: 0;
   border: none;
   padding: 20px 0;
   font-family: var(--font-heading);
@@ -370,6 +371,21 @@
 
 .home-find-us__submit {
   flex-shrink: 0;
+}
+
+/* Mobile (real Figma mobile frame, node 79:511): this button is a compact
+   ~107px pill, not the generic .btn's wide 50px-each-side CTA padding —
+   that mismatch overflowed the search bar's own right edge even at
+   Figma's own 440px mobile reference width (measured live: 22px past the
+   card's edge before this fix), well before any narrower real device.
+   Desktop already renders close to Figma's own 177px target there
+   (.btn's default hug-sizing happens to land nearby) so only the mobile
+   tier needed a dedicated override. */
+@media (max-width: 767px) {
+  .home-find-us__submit {
+    gap: 6px;
+    padding-inline: 14px;
+  }
 }
 
 @media (max-width: 1023px) {
