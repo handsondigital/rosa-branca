@@ -12,10 +12,25 @@
  * so they render correctly with zero seeding. This command only creates
  * things that need a real database row: the Home page itself (see its own
  * note in CONTENT_MODEL.md — required for those meta fields to have
- * somewhere to live), and a handful of `receita`/`produto` sample posts
- * with real Featured Images (imported from the theme's own existing
- * assets/images/ placeholders — CONTENT_MODEL.md's explicit instruction
- * not to invent new photography for this).
+ * somewhere to live), a handful of `receita`/`produto` sample posts with
+ * real Featured Images, and every editable image/attachment-id field on
+ * Home/Fale Conosco (Banner slides, "Sobre a Marca" photo, Fale Conosco
+ * hero photo) — all imported from the theme's own existing assets/images/
+ * placeholders (CONTENT_MODEL.md's explicit instruction not to invent new
+ * photography for this).
+ *
+ * Every image/attachment-id field gets seeded with a REAL imported image,
+ * never left at its empty/0 default — CLAUDE.md's "Any new editable/
+ * dynamic field follows this process" step 3 makes this a hard rule now,
+ * not a judgment call: a text field's `register_post_meta() 'default'`
+ * is real content on its own, but an attachment-id field's only honest
+ * default is empty, which means the front-end silently falls back to the
+ * static placeholder and inc/uploads.php's AVIF/WebP pipeline never runs
+ * against real content. That gap is exactly what let a real regression
+ * ship unnoticed once already (Home's hero — CLAUDE.md's "Performance
+ * measurement" note): the banner repeater was the only image field seeded
+ * with a real attachment, so it was the only one that had ever exercised
+ * `rosa_branca_dynamic_picture()` for real before that Lighthouse run.
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -53,6 +68,8 @@ class Rosa_Branca_Seed_CLI {
 		$this->seed_receitas();
 		$this->seed_produtos();
 		$this->seed_banners();
+		$this->seed_about_photo();
+		$this->seed_fale_conosco_hero_photo();
 		$this->seed_nav_menu( 'primary', __( 'Menu Principal', 'rosa-branca' ) );
 		$this->seed_nav_menu( 'footer', __( 'Menu Rodapé', 'rosa-branca' ) );
 
@@ -293,6 +310,76 @@ class Rosa_Branca_Seed_CLI {
 		update_post_meta( $home_id, 'rosa_branca_banner_slides', array_fill( 0, 5, $mock_slide ) );
 
 		WP_CLI::log( '5 slide(s) do Banner (Hero) configurados com a imagem otimizada (ID ' . $attachment_id . ').' );
+	}
+
+	/**
+	 * Fills the Home page's "Sobre a Marca" photo (inc/home-fields.php's
+	 * rosa_branca_about_photo_id, CONTENT_MODEL.md) with a real imported
+	 * image — same reasoning as seed_banners() above: an attachment-id
+	 * field left at 0 never exercises inc/uploads.php's AVIF/WebP pipeline,
+	 * it just silently renders the static placeholder fallback
+	 * (template-parts/home/about.php's `foto-sobre-a-marca` branch).
+	 */
+	private function seed_about_photo(): void {
+		$home_id = rosa_branca_home_page_id();
+		if ( ! $home_id ) {
+			WP_CLI::warning( 'Página "Home" não encontrada — pulando foto "Sobre a Marca".' );
+			return;
+		}
+
+		if ( ! empty( get_post_meta( $home_id, 'rosa_branca_about_photo_id', true ) ) ) {
+			WP_CLI::log( 'Foto "Sobre a Marca" já configurada — pulando.' );
+			return;
+		}
+
+		$attachment_id = $this->import_sample_image(
+			get_theme_file_path( 'assets/images/foto-sobre-a-marca.png' ),
+			'Sobre a Marca',
+			$home_id
+		);
+
+		if ( ! $attachment_id ) {
+			WP_CLI::warning( 'Falha ao importar a foto "Sobre a Marca" — campo não configurado.' );
+			return;
+		}
+
+		update_post_meta( $home_id, 'rosa_branca_about_photo_id', $attachment_id );
+		WP_CLI::log( 'Foto "Sobre a Marca" configurada com a imagem otimizada (ID ' . $attachment_id . ').' );
+	}
+
+	/**
+	 * Fills the Fale Conosco page's hero background photo (inc/fale-conosco-
+	 * fields.php's rosa_branca_contact_hero_photo_id, CONTENT_MODEL.md) with
+	 * a real imported image — same reasoning as seed_about_photo() above.
+	 * Unlike seed_home_page(), this never creates the Fale Conosco Page
+	 * itself (it already exists — page-fale-conosco.php's routing requires
+	 * it to, PAGES_PLAN.md's current scope), only sets this one field.
+	 */
+	private function seed_fale_conosco_hero_photo(): void {
+		$page = get_page_by_path( 'fale-conosco' );
+		if ( ! $page ) {
+			WP_CLI::warning( 'Página "Fale Conosco" não encontrada — pulando foto do hero.' );
+			return;
+		}
+
+		if ( ! empty( get_post_meta( $page->ID, 'rosa_branca_contact_hero_photo_id', true ) ) ) {
+			WP_CLI::log( 'Foto do hero (Fale Conosco) já configurada — pulando.' );
+			return;
+		}
+
+		$attachment_id = $this->import_sample_image(
+			get_theme_file_path( 'assets/images/foto-trigo-farinha.png' ),
+			'Trigo e farinha Rosa Branca',
+			$page->ID
+		);
+
+		if ( ! $attachment_id ) {
+			WP_CLI::warning( 'Falha ao importar a foto do hero (Fale Conosco) — campo não configurado.' );
+			return;
+		}
+
+		update_post_meta( $page->ID, 'rosa_branca_contact_hero_photo_id', $attachment_id );
+		WP_CLI::log( 'Foto do hero (Fale Conosco) configurada com a imagem otimizada (ID ' . $attachment_id . ').' );
 	}
 }
 
