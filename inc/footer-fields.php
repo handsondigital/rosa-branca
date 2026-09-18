@@ -35,9 +35,19 @@ function rosa_branca_footer_defaults(): array {
 		'rosa_branca_footer_whatsapp_text'   => __( 'Lorem Ipsum', 'rosa-branca' ),
 		'rosa_branca_footer_phone_text'      => __( 'Lorem Ipsum', 'rosa-branca' ),
 		'rosa_branca_footer_disclaimer_text' => __( 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.', 'rosa-branca' ),
-		'rosa_branca_footer_instagram_url'   => '',
-		'rosa_branca_footer_facebook_url'    => '',
-		'rosa_branca_footer_youtube_url'     => '',
+		// Instagram/Facebook are real accounts (confirmed via web search —
+		// the official "Rosa Branca" wheat-flour brand, @farinharosabranca,
+		// now part of Bunge's portfolio after the Viterra merger), not
+		// placeholder copy like the fields above. YouTube is the opposite:
+		// no official brand channel could be confirmed (only third-party
+		// recipe videos mentioning the product), so this is a MOCK handle
+		// (same shape as the other two, not a real, verified channel) —
+		// same "realistic placeholder, not final" convention as this
+		// theme's other placeholder copy (CLAUDE.md's "Copy" item). Swap
+		// for the real channel URL once the client confirms one exists.
+		'rosa_branca_footer_instagram_url'   => 'https://www.instagram.com/farinharosabranca/',
+		'rosa_branca_footer_facebook_url'    => 'https://www.facebook.com/farinharosabranca/',
+		'rosa_branca_footer_youtube_url'     => 'https://www.youtube.com/@farinharosabranca',
 	);
 }
 
