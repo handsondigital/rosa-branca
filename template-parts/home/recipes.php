@@ -1,33 +1,61 @@
 <?php
 /**
- * "Receitas" teaser: intro text + a carousel of recipe cards. Content below
- * is placeholder pending a real recipes source (out of the current scope —
- * PAGES_PLAN.md §15 restricts this delivery to Home + Fale Conosco only).
+ * "Receitas" teaser: intro text + a carousel of recipe cards. Section
+ * title/text/button link are editable (inc/home-fields.php,
+ * CONTENT_MODEL.md) — button label stays fixed in code either way (same
+ * rule for every CTA in the project). Cards come from real `receita`
+ * posts once any exist; falls back to the literal Figma placeholder copy
+ * (node 2:6, "Caixa de Receita" x3) until an editor adds real recipes —
+ * same fallback shape as rosa_branca_home_banner_slides().
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-// Literal Figma placeholder copy (node 2:6) — not adapted. The source file
-// shows exactly 3 "Caixa de Receita" instances, so that's what renders here
-// (an earlier version padded this to 5 to give the carousel more range to
-// click through, but that meant inventing 2 cards not present in Figma).
-// With only 3 cards and ~2.5 visible at once, "next" reaches the end after
-// one click — that's the real, correct behaviour for this exact content.
-// No per-recipe page/slug exists yet (individual recipe pages are out of
-// PAGES_PLAN.md's current scope, same as /receitas/ itself) — links to the
-// same /receitas/ URL as the section's own CTA button below, as a
-// placeholder destination until real recipe content/routing exists.
-$rosa_branca_recipe_card = array(
-	'eyebrow'    => __( 'receitas', 'rosa-branca' ),
-	'title'      => __( 'Lorem Ipsum Dolor', 'rosa-branca' ),
-	'excerpt'    => __( 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur congue condimentum erat, at accumsan risus rhoncus id.', 'rosa-branca' ),
-	'time'       => '2h 30min.',
-	'difficulty' => __( 'Fácil', 'rosa-branca' ),
-	'url'        => home_url( '/receitas/' ),
+$rosa_branca_recipe_posts = get_posts(
+	array(
+		'post_type'      => 'receita',
+		'post_status'    => 'publish',
+		'posts_per_page' => 3,
+		'orderby'        => 'date',
+		'order'          => 'DESC',
+	)
 );
-$rosa_branca_recipes = array_fill( 0, 3, $rosa_branca_recipe_card );
+
+$rosa_branca_recipes = array();
+
+if ( $rosa_branca_recipe_posts ) {
+	foreach ( $rosa_branca_recipe_posts as $recipe_post ) {
+		$rosa_branca_recipes[] = array(
+			'thumbnail_id' => get_post_thumbnail_id( $recipe_post ),
+			'title'        => get_the_title( $recipe_post ),
+			'excerpt'      => get_the_excerpt( $recipe_post ),
+			// No per-recipe page/slug exists yet (PAGES_PLAN.md §15) — every
+			// card links to the section's own placeholder /receitas/ URL
+			// until individual recipe routing is in scope.
+			'url'          => home_url( '/receitas/' ),
+			'time'         => get_post_meta( $recipe_post->ID, 'tempo_preparo', true ),
+			'difficulty'   => rosa_branca_dificuldade_label( get_post_meta( $recipe_post->ID, 'dificuldade', true ) ),
+		);
+	}
+} else {
+	$rosa_branca_recipes = array_fill(
+		0,
+		3,
+		array(
+			'thumbnail_id' => 0,
+			'title'        => __( 'Lorem Ipsum Dolor', 'rosa-branca' ),
+			'excerpt'      => __( 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur congue condimentum erat, at accumsan risus rhoncus id.', 'rosa-branca' ),
+			'url'          => home_url( '/receitas/' ),
+			'time'         => '2h 30min.',
+			'difficulty'   => __( 'Fácil', 'rosa-branca' ),
+		)
+	);
+}
+
+$rosa_branca_home_id           = rosa_branca_home_page_id();
+$rosa_branca_recipes_intro_link = get_post_meta( $rosa_branca_home_id, 'rosa_branca_recipes_intro_link', true );
 ?>
 <section class="home-section home-section--bleed home-section--bleed-left">
 	<div class="home-section__row">
@@ -45,7 +73,11 @@ $rosa_branca_recipes = array_fill( 0, 3, $rosa_branca_recipe_card );
 				<?php foreach ( $rosa_branca_recipes as $recipe ) : ?>
 					<article class="recipe-card" data-reveal-item>
 						<div class="recipe-card__media">
-							<?php rosa_branca_picture( 'recipe-card-placeholder', array( 'alt' => '' ) ); ?>
+							<?php if ( $recipe['thumbnail_id'] ) : ?>
+								<?php rosa_branca_dynamic_picture( $recipe['thumbnail_id'], 'receita-card', array( 'alt' => '' ) ); ?>
+							<?php else : ?>
+								<?php rosa_branca_picture( 'recipe-card-placeholder', array( 'alt' => '' ) ); ?>
+							<?php endif; ?>
 						</div>
 						<div class="recipe-card__body">
 							<span class="recipe-card__eyebrow"><?php esc_html_e( 'Receitas', 'rosa-branca' ); ?></span>
@@ -54,9 +86,11 @@ $rosa_branca_recipes = array_fill( 0, 3, $rosa_branca_recipe_card );
 							</h3>
 							<p class="recipe-card__description"><?php echo esc_html( $recipe['excerpt'] ); ?></p>
 							<div class="recipe-card__meta">
-								<?php rosa_branca_icon( 'clock' ); ?>
-								<span><?php echo esc_html( $recipe['time'] ); ?></span>
-								<span class="recipe-card__meta-divider" aria-hidden="true"></span>
+								<?php if ( $recipe['time'] ) : ?>
+									<?php rosa_branca_icon( 'clock' ); ?>
+									<span><?php echo esc_html( $recipe['time'] ); ?></span>
+									<span class="recipe-card__meta-divider" aria-hidden="true"></span>
+								<?php endif; ?>
 								<?php rosa_branca_icon( 'difficulty' ); ?>
 								<span><?php echo esc_html( $recipe['difficulty'] ); ?></span>
 							</div>
@@ -75,9 +109,11 @@ $rosa_branca_recipes = array_fill( 0, 3, $rosa_branca_recipe_card );
 		</div>
 
 		<div class="home-section__content">
-			<h2 class="home-section__title"><?php esc_html_e( 'Lorem ipsum dolor sit amet', 'rosa-branca' ); ?></h2>
-			<p class="home-section__text"><?php esc_html_e( 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse ut massa neque. Etiam egestas magna sit amet elit accumsan tristique in ut nunc. Sed porta, ex eget ornare facilisis, dui libero bibendum enim, vitae sodales turpis ex vel nisi. Phasellus felis odio, egestas sed elit in, finibus dapibus dui. Integer purus nunc, hendrerit eu odio nec, bibendum fringilla erat. Quisque condimentum lectus nec hendrerit ullamcorper. Proin vestibulum eros sit amet diam feugiat rhoncus.', 'rosa-branca' ); ?></p>
-			<a class="btn btn--red" href="<?php echo esc_url( home_url( '/receitas/' ) ); ?>"><?php esc_html_e( 'lorem ipsum', 'rosa-branca' ); ?></a>
+			<h2 class="home-section__title"><?php echo esc_html( get_post_meta( $rosa_branca_home_id, 'rosa_branca_recipes_intro_title', true ) ); ?></h2>
+			<p class="home-section__text"><?php echo esc_html( get_post_meta( $rosa_branca_home_id, 'rosa_branca_recipes_intro_text', true ) ); ?></p>
+			<?php if ( $rosa_branca_recipes_intro_link ) : ?>
+				<a class="btn btn--red" href="<?php echo esc_url( $rosa_branca_recipes_intro_link ); ?>"><?php esc_html_e( 'lorem ipsum', 'rosa-branca' ); ?></a>
+			<?php endif; ?>
 		</div>
 	</div>
 </section>

@@ -1,31 +1,51 @@
 <?php
 /**
- * "Sobre a Marca" teaser: photo + heading/text/outline-button. Fully static
- * — no interactivity, so no JS at all (PHP/HTML only).
+ * "Sobre a Marca" teaser: photo + heading/text/outline-button. Fully
+ * editable (inc/home-fields.php, CONTENT_MODEL.md) — button label stays
+ * fixed in code, link is optional (omits the button when empty).
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
+
+$rosa_branca_home_id    = rosa_branca_home_page_id();
+$rosa_branca_about_link = get_post_meta( $rosa_branca_home_id, 'rosa_branca_about_link', true );
+$rosa_branca_photo_id   = (int) get_post_meta( $rosa_branca_home_id, 'rosa_branca_about_photo_id', true );
 ?>
 <section class="home-section container" data-reveal>
 	<div class="home-section__grid">
 		<div class="home-section__media">
-			<?php
-			rosa_branca_picture(
-				'foto-sobre-a-marca',
-				array(
-					'img_class' => 'home-about__photo',
-					'alt'       => __( 'Produção artesanal com farinha Rosa Branca', 'rosa-branca' ),
-				)
-			);
-			?>
+			<?php if ( $rosa_branca_photo_id ) : ?>
+				<?php
+				rosa_branca_dynamic_picture(
+					$rosa_branca_photo_id,
+					'full',
+					array(
+						'img_class' => 'home-about__photo',
+						'alt'       => __( 'Produção artesanal com farinha Rosa Branca', 'rosa-branca' ),
+					)
+				);
+				?>
+			<?php else : ?>
+				<?php
+				rosa_branca_picture(
+					'foto-sobre-a-marca',
+					array(
+						'img_class' => 'home-about__photo',
+						'alt'       => __( 'Produção artesanal com farinha Rosa Branca', 'rosa-branca' ),
+					)
+				);
+				?>
+			<?php endif; ?>
 		</div>
 
 		<div class="home-section__content">
-			<h2 class="home-section__title"><?php esc_html_e( 'Lorem ipsum dolor sit amet', 'rosa-branca' ); ?></h2>
-			<p class="home-section__text"><?php esc_html_e( 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse ut massa neque. Etiam egestas magna sit amet elit accumsan tristique in ut nunc. Sed porta, ex eget ornare facilisis, dui libero bibendum enim, vitae sodales turpis ex vel nisi. Phasellus felis odio, egestas sed elit in, finibus dapibus dui. Integer purus nunc, hendrerit eu odio nec, bibendum fringilla erat. Quisque condimentum lectus nec hendrerit ullamcorper. Proin vestibulum eros sit amet diam feugiat rhoncus.', 'rosa-branca' ); ?></p>
-			<a class="btn btn--outline" href="<?php echo esc_url( home_url( '/sobre-a-marca/' ) ); ?>"><?php esc_html_e( 'lorem ipsum', 'rosa-branca' ); ?></a>
+			<h2 class="home-section__title"><?php echo esc_html( get_post_meta( $rosa_branca_home_id, 'rosa_branca_about_title', true ) ); ?></h2>
+			<p class="home-section__text"><?php echo esc_html( get_post_meta( $rosa_branca_home_id, 'rosa_branca_about_text', true ) ); ?></p>
+			<?php if ( $rosa_branca_about_link ) : ?>
+				<a class="btn btn--outline" href="<?php echo esc_url( $rosa_branca_about_link ); ?>"><?php esc_html_e( 'lorem ipsum', 'rosa-branca' ); ?></a>
+			<?php endif; ?>
 		</div>
 	</div>
 </section>

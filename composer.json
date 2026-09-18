@@ -1,0 +1,22 @@
+{
+  "name": "handson-digital/rosa-branca",
+  "description": "PHP dev dependencies for the Rosa Branca theme (unit tests only — no runtime PHP dependencies).",
+  "type": "wordpress-theme",
+  "license": "proprietary",
+  "require-dev": {
+    "php": ">=8.2",
+    "10up/wp_mock": "^1.0",
+    "phpunit/phpunit": "^9.6"
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "RosaBranca\\Tests\\": "tests/"
+    }
+  },
+  "scripts": {
+    "test": "phpunit --colors=always"
+  },
+  "config": {
+    "sort-packages": true
+  }
+}

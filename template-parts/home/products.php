@@ -1,25 +1,55 @@
 <?php
 /**
  * "Produtos" teaser: intro text on the left, carousel of product photos on
- * the right (mirrored layout from the recipes section, per Figma).
+ * the right (mirrored layout from the recipes section, per Figma). Section
+ * title/text/button link editable (inc/home-fields.php, CONTENT_MODEL.md).
+ * Cards come from real `produto` posts once any exist; falls back to the
+ * theme's static placeholder images otherwise — same fallback shape as
+ * recipes.php.
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-$rosa_branca_products = array(
-	array( 'image' => 'farinha-home-1', 'alt' => __( 'Farinha de trigo Rosa Branca', 'rosa-branca' ) ),
-	array( 'image' => 'farinha-home-2', 'alt' => __( 'Farinha de trigo Rosa Branca especial', 'rosa-branca' ) ),
-	array( 'image' => 'farinha-home-3', 'alt' => __( 'Farinha de trigo Rosa Branca integral', 'rosa-branca' ) ),
+$rosa_branca_product_posts = get_posts(
+	array(
+		'post_type'      => 'produto',
+		'post_status'    => 'publish',
+		'posts_per_page' => 3,
+		'orderby'        => 'date',
+		'order'          => 'DESC',
+	)
 );
+
+$rosa_branca_products = array();
+
+if ( $rosa_branca_product_posts ) {
+	foreach ( $rosa_branca_product_posts as $product_post ) {
+		$rosa_branca_products[] = array(
+			'thumbnail_id' => get_post_thumbnail_id( $product_post ),
+			'alt'          => get_the_title( $product_post ),
+		);
+	}
+} else {
+	$rosa_branca_products = array(
+		array( 'image' => 'farinha-home-1', 'alt' => __( 'Farinha de trigo Rosa Branca', 'rosa-branca' ) ),
+		array( 'image' => 'farinha-home-2', 'alt' => __( 'Farinha de trigo Rosa Branca especial', 'rosa-branca' ) ),
+		array( 'image' => 'farinha-home-3', 'alt' => __( 'Farinha de trigo Rosa Branca integral', 'rosa-branca' ) ),
+	);
+}
+
+$rosa_branca_home_id            = rosa_branca_home_page_id();
+$rosa_branca_products_intro_link = get_post_meta( $rosa_branca_home_id, 'rosa_branca_products_intro_link', true );
 ?>
 <section class="home-section home-section--bleed home-section--bleed-right">
 	<div class="home-section__row">
 		<div class="home-section__content">
-			<h2 class="home-section__title"><?php esc_html_e( 'Lorem ipsum dolor sit amet', 'rosa-branca' ); ?></h2>
-			<p class="home-section__text"><?php esc_html_e( 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse ut massa neque. Etiam egestas magna sit amet elit accumsan tristique in ut nunc. Sed porta, ex eget ornare facilisis, dui libero bibendum enim, vitae sodales turpis ex vel nisi. Phasellus felis odio, egestas sed elit in, finibus dapibus dui. Integer purus nunc, hendrerit eu odio nec, bibendum fringilla erat. Quisque condimentum lectus nec hendrerit ullamcorper. Proin vestibulum eros sit amet diam feugiat rhoncus.', 'rosa-branca' ); ?></p>
-			<a class="btn btn--red" href="<?php echo esc_url( home_url( '/produtos/' ) ); ?>"><?php esc_html_e( 'lorem ipsum', 'rosa-branca' ); ?></a>
+			<h2 class="home-section__title"><?php echo esc_html( get_post_meta( $rosa_branca_home_id, 'rosa_branca_products_intro_title', true ) ); ?></h2>
+			<p class="home-section__text"><?php echo esc_html( get_post_meta( $rosa_branca_home_id, 'rosa_branca_products_intro_text', true ) ); ?></p>
+			<?php if ( $rosa_branca_products_intro_link ) : ?>
+				<a class="btn btn--red" href="<?php echo esc_url( $rosa_branca_products_intro_link ); ?>"><?php esc_html_e( 'lorem ipsum', 'rosa-branca' ); ?></a>
+			<?php endif; ?>
 		</div>
 
 		<div class="home-section__media" data-reveal-group>
@@ -35,7 +65,11 @@ $rosa_branca_products = array(
 			>
 				<?php foreach ( $rosa_branca_products as $product ) : ?>
 					<div class="home-products__item" data-reveal-item>
-						<?php rosa_branca_picture( $product['image'], array( 'alt' => $product['alt'] ) ); ?>
+						<?php if ( ! empty( $product['thumbnail_id'] ) ) : ?>
+							<?php rosa_branca_dynamic_picture( $product['thumbnail_id'], 'produto-card', array( 'alt' => $product['alt'] ) ); ?>
+						<?php else : ?>
+							<?php rosa_branca_picture( $product['image'], array( 'alt' => $product['alt'] ) ); ?>
+						<?php endif; ?>
 					</div>
 				<?php endforeach; ?>
 			</div>

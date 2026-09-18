@@ -1,0 +1,47 @@
+# Fast feedback on every push/PR — lint + build sanity + PHP unit tests
+# (composer/WP_Mock, tests/). Deliberately separate from deploy-dev.yml:
+# this needs no server secrets and doesn't touch any server, so it runs on
+# every push regardless of whether deploy credentials exist yet.
+
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      # --legacy-peer-deps: see deploy-dev.yml's own note — same
+      # pre-existing peer-dependency conflict, unrelated to this workflow.
+      - name: Install JS dependencies
+        run: npm ci --legacy-peer-deps
+
+      - name: Lint (JS/CSS/fonts/dedupe)
+        run: npm run lint
+
+      - name: Build (sanity check — catches Vite/build-time errors)
+        run: npm run build
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.2"
+          tools: composer
+
+      - name: Install PHP dependencies
+        run: composer install --no-interaction --prefer-dist
+
+      - name: PHP unit tests (WP_Mock — see tests/, CONTENT_MODEL.md)
+        run: composer test

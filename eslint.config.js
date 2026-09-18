@@ -5,7 +5,7 @@ import reactRefresh from "eslint-plugin-react-refresh";
 import globals from "globals";
 
 export default [
-  { ignores: ["dist/**", "node_modules/**", "reports/**"] },
+  { ignores: ["dist/**", "node_modules/**", "reports/**", "vendor/**"] },
   js.configs.recommended,
   {
     files: ["src/**/*.{js,jsx}"],
@@ -33,6 +33,17 @@ export default [
       ecmaVersion: 2022,
       sourceType: "module",
       globals: { ...globals.node },
+    },
+  },
+  {
+    // Classic wp-admin scripts (inc/admin-fields-ui.php's enqueue) — plain
+    // <script> globals (jQuery/wp.media are already on the page there),
+    // not part of the Vite bundle, so not under src/**.
+    files: ["assets/admin/**/*.js"],
+    languageOptions: {
+      ecmaVersion: 2022,
+      sourceType: "script",
+      globals: { ...globals.browser, wp: "readonly" },
     },
   },
 ];

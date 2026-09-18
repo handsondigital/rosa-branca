@@ -1,41 +1,39 @@
 <?php
 /**
- * "Título e Leade" intro + 4 contact-detail cards (SAC, e-mail, WhatsApp,
- * endereço). Literal Figma placeholder copy (node 630:6620) — not adapted;
- * every card uses the same "Lorem ipsum dolor" text because that's what the
- * source file has (only one card design was mocked, reused 4x with only
- * the icon actually varying).
+ * "Título e Leade" intro + contact-detail cards (SAC, e-mail, WhatsApp,
+ * endereço by default). Intro title/text editable (inc/fale-conosco-fields.php);
+ * the cards themselves come from the "Canais de contato" repeater —
+ * rosa_branca_contact_channels() falls back to today's exact 4 hardcoded
+ * channels until an editor configures real ones. `line2` is optional per
+ * channel (CONTENT_MODEL.md) — omitted entirely when empty, not left as a
+ * blank line, so a one-line channel doesn't leave dead vertical space.
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-$rosa_branca_contact_detail_lines = array( __( 'Lorem ipsum dolor sit amet', 'rosa-branca' ), __( 'Lorem ipsum dolor sit amet', 'rosa-branca' ) );
-$rosa_branca_contact_details      = array(
-	array( 'icon' => 'headset-sac', 'title' => __( 'Lorem ipsum dolor', 'rosa-branca' ), 'lines' => $rosa_branca_contact_detail_lines ),
-	array( 'icon' => 'envelope', 'title' => __( 'Lorem ipsum dolor', 'rosa-branca' ), 'lines' => $rosa_branca_contact_detail_lines ),
-	array( 'icon' => 'contact-whatsapp', 'title' => __( 'Lorem ipsum dolor', 'rosa-branca' ), 'lines' => $rosa_branca_contact_detail_lines ),
-	array( 'icon' => 'marker', 'title' => __( 'Lorem ipsum dolor', 'rosa-branca' ), 'lines' => $rosa_branca_contact_detail_lines ),
-);
+$rosa_branca_fc_page = get_page_by_path( 'fale-conosco' );
+$rosa_branca_fc_id   = $rosa_branca_fc_page ? $rosa_branca_fc_page->ID : 0;
 ?>
 <div class="contact-details">
 	<div class="contact-details__intro">
-		<h2 class="contact-details__title"><?php esc_html_e( 'Lorem Ipsum', 'rosa-branca' ); ?></h2>
-		<p><?php esc_html_e( 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse ut massa neque.', 'rosa-branca' ); ?></p>
+		<h2 class="contact-details__title"><?php echo esc_html( rosa_branca_fc_meta( $rosa_branca_fc_id, 'rosa_branca_contact_details_intro_title' ) ); ?></h2>
+		<p><?php echo esc_html( rosa_branca_fc_meta( $rosa_branca_fc_id, 'rosa_branca_contact_details_intro_text' ) ); ?></p>
 	</div>
 
 	<div class="contact-details__list" data-reveal-group>
-		<?php foreach ( $rosa_branca_contact_details as $detail ) : ?>
+		<?php foreach ( rosa_branca_contact_channels() as $channel ) : ?>
 			<div class="contact-detail" data-reveal-item>
 				<span class="contact-detail__icon">
-					<?php rosa_branca_icon( $detail['icon'] ); ?>
+					<?php rosa_branca_icon( $channel['icon'] ); ?>
 				</span>
 				<div>
-					<p class="contact-detail__title"><?php echo esc_html( $detail['title'] ); ?></p>
-					<?php foreach ( $detail['lines'] as $line ) : ?>
-						<span class="contact-detail__text"><?php echo esc_html( $line ); ?></span>
-					<?php endforeach; ?>
+					<p class="contact-detail__title"><?php echo esc_html( $channel['title'] ); ?></p>
+					<span class="contact-detail__text"><?php echo esc_html( $channel['line1'] ); ?></span>
+					<?php if ( ! empty( $channel['line2'] ) ) : ?>
+						<span class="contact-detail__text"><?php echo esc_html( $channel['line2'] ); ?></span>
+					<?php endif; ?>
 				</div>
 			</div>
 		<?php endforeach; ?>

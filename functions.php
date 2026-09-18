@@ -15,8 +15,13 @@ require get_theme_file_path( 'inc/theme-setup.php' );
 require get_theme_file_path( 'inc/assets.php' );
 require get_theme_file_path( 'inc/icons.php' );
 require get_theme_file_path( 'inc/images.php' );
+require get_theme_file_path( 'inc/content-fields.php' );
 require get_theme_file_path( 'inc/post-types.php' );
 require get_theme_file_path( 'inc/uploads.php' );
+require get_theme_file_path( 'inc/admin-fields-ui.php' );
+require get_theme_file_path( 'inc/home-fields.php' );
+require get_theme_file_path( 'inc/fale-conosco-fields.php' );
+require get_theme_file_path( 'inc/cli-seed.php' );
 
 // NOTE: o formulário de Fale Conosco está implementado apenas no front-end
 // por ora (ver template-parts/fale-conosco/form.php). O handler de envio

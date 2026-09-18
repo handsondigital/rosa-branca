@@ -6,8 +6,14 @@ dist/
 assets/images/generated/
 assets/fonts/generated/
 
+# PHP dev dependencies (WP_Mock/PHPUnit for unit tests) — reinstalled via
+# `composer install`, same convention as node_modules/. composer.lock IS
+# versioned (same reasoning as package-lock.json) for reproducible installs.
+vendor/
+
 # Local tooling output
 reports/
+.phpunit.result.cache
 
 # OS / editor cruft
 .DS_Store

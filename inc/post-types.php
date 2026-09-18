@@ -5,11 +5,11 @@
  * Native WordPress CPT + Featured Image, per ARCHITECTURE_PLAN.md's explicit
  * constraint against ACF/Elementor/Gutenberg/Headless as the frontend base
  * (see that file's "A arquitetura deve evitar... não deve utilizar...
- * ACF... como base do frontend"). Custom fields beyond core title/editor/
- * excerpt/thumbnail are intentionally NOT registered yet — the client
- * hasn't decided what those fields are. This file only needs to exist once:
- * whatever fields get decided later are additive (more `supports`, or a
- * `register_post_meta()` call each), not a rearchitecture.
+ * ACF... como base do frontend"). `receita`'s two custom fields
+ * (dificuldade/tempo_preparo — CONTENT_MODEL.md) are the only ones decided
+ * so far; `produto` has none beyond core (nothing on the front-end needs
+ * more yet). Whatever gets decided later for `produto` is additive (more
+ * `supports`, or a `register_post_meta()` call), not a rearchitecture.
  *
  * `public => false` / `show_ui => true`: no single/archive templates or
  * routes exist yet (PAGES_PLAN.md §15 scopes the current delivery to Home +
@@ -63,6 +63,43 @@ function rosa_branca_register_post_types(): void {
 	);
 }
 add_action( 'init', 'rosa_branca_register_post_types' );
+
+/**
+ * Both sanitize callbacks (rosa_branca_sanitize_dificuldade/
+ * rosa_branca_sanitize_tempo_preparo) live in inc/content-fields.php, not
+ * here — that file has no side-effecting top-level code (no add_action()/
+ * register_post_type() calls), so tests/ReceitaMetaTest.php can require it
+ * directly without needing WP_Mock stubs for the registration functions
+ * this file calls. Only the wiring (register_post_meta() below) lives here.
+ */
+function rosa_branca_register_post_meta(): void {
+	register_post_meta(
+		'receita',
+		'dificuldade',
+		array(
+			'type'              => 'string',
+			'single'            => true,
+			'default'           => 'facil',
+			'show_in_rest'      => true,
+			'sanitize_callback' => 'rosa_branca_sanitize_dificuldade',
+			'auth_callback'     => static fn(): bool => current_user_can( 'edit_posts' ),
+		)
+	);
+
+	register_post_meta(
+		'receita',
+		'tempo_preparo',
+		array(
+			'type'              => 'string',
+			'single'            => true,
+			'default'           => '',
+			'show_in_rest'      => true,
+			'sanitize_callback' => 'rosa_branca_sanitize_tempo_preparo',
+			'auth_callback'     => static fn(): bool => current_user_can( 'edit_posts' ),
+		)
+	);
+}
+add_action( 'init', 'rosa_branca_register_post_meta' );
 
 /**
  * Featured-image crop sizes matching the two real display contexts already

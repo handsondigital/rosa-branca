@@ -1,0 +1,33 @@
+/* Minimal spacing for the native meta boxes (inc/home-fields.php,
+   inc/fale-conosco-fields.php) — wp-admin already styles inputs/buttons,
+   this only fixes layout rhythm between our own custom rows. */
+.rb-field {
+  margin-bottom: 14px;
+}
+
+.rb-field label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.rb-image-field__preview img {
+  max-width: 200px;
+  height: auto;
+  display: block;
+  margin-bottom: 8px;
+  border: 1px solid #dcdcde;
+}
+
+.rb-repeater-row {
+  border: 1px solid #dcdcde;
+  border-radius: 4px;
+  padding: 12px 16px;
+  margin-bottom: 16px;
+  background: #fff;
+}
+
+.rb-repeater-row__remove {
+  color: #b32d2e;
+  float: right;
+}
