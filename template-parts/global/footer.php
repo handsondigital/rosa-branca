@@ -26,7 +26,7 @@ $rosa_branca_footer_menu = rosa_branca_get_nav_items( 'footer', rosa_branca_curr
 			// twice — Figma's own text layer (607:1901) repeats this same
 			// paragraph twice, so two independent fields would just be a way
 			// for the two copies to drift apart for no reason.
-			$rosa_branca_footer_blurb = get_option( 'rosa_branca_footer_brand_text' );
+			$rosa_branca_footer_blurb = rosa_branca_get_footer_option( 'rosa_branca_footer_brand_text' );
 			?>
 			<div class="site-footer__brand-text">
 				<p><?php echo esc_html( $rosa_branca_footer_blurb ); ?></p>
@@ -47,11 +47,11 @@ $rosa_branca_footer_menu = rosa_branca_get_nav_items( 'footer', rosa_branca_curr
 			<p class="site-footer__heading"><?php esc_html_e( 'Contato', 'rosa-branca' ); ?></p>
 			<div class="site-footer__contact-item">
 				<?php rosa_branca_icon( 'footer-whatsapp' ); ?>
-				<span><?php echo esc_html( get_option( 'rosa_branca_footer_whatsapp_text' ) ); ?></span>
+				<span><?php echo esc_html( rosa_branca_get_footer_option( 'rosa_branca_footer_whatsapp_text' ) ); ?></span>
 			</div>
 			<div class="site-footer__contact-item">
 				<?php rosa_branca_icon( 'footer-phone' ); ?>
-				<span><?php echo esc_html( get_option( 'rosa_branca_footer_phone_text' ) ); ?></span>
+				<span><?php echo esc_html( rosa_branca_get_footer_option( 'rosa_branca_footer_phone_text' ) ); ?></span>
 			</div>
 
 			<?php
@@ -63,9 +63,9 @@ $rosa_branca_footer_menu = rosa_branca_get_nav_items( 'footer', rosa_branca_curr
 			// dead weight with nothing under it if every link is empty,
 			// so it's gated on the same condition, not just the icons row.
 			$rosa_branca_social_links = array(
-				'instagram' => get_option( 'rosa_branca_footer_instagram_url' ),
-				'facebook'  => get_option( 'rosa_branca_footer_facebook_url' ),
-				'youtube'   => get_option( 'rosa_branca_footer_youtube_url' ),
+				'instagram' => rosa_branca_get_footer_option( 'rosa_branca_footer_instagram_url' ),
+				'facebook'  => rosa_branca_get_footer_option( 'rosa_branca_footer_facebook_url' ),
+				'youtube'   => rosa_branca_get_footer_option( 'rosa_branca_footer_youtube_url' ),
 			);
 			$rosa_branca_has_social_links = array_filter( $rosa_branca_social_links );
 			?>
@@ -88,5 +88,5 @@ $rosa_branca_footer_menu = rosa_branca_get_nav_items( 'footer', rosa_branca_curr
 </footer>
 
 <div class="site-footer__disclaimer">
-	<p><?php echo esc_html( get_option( 'rosa_branca_footer_disclaimer_text' ) ); ?></p>
+	<p><?php echo esc_html( rosa_branca_get_footer_option( 'rosa_branca_footer_disclaimer_text' ) ); ?></p>
 </div>
