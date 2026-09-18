@@ -36,7 +36,7 @@ $rosa_branca_hero_slides = rosa_branca_home_banner_slides();
 					<?php
 					rosa_branca_dynamic_picture(
 						(int) $slide['image_id'],
-						'full',
+						'hero-bleed',
 						array(
 							'img_class'     => 'home-hero__image hero-shell__image',
 							'alt'           => '',

@@ -113,5 +113,18 @@ add_action( 'init', 'rosa_branca_register_post_meta' );
 function rosa_branca_register_image_sizes(): void {
 	add_image_size( 'receita-card', 380, 9999, false );
 	add_image_size( 'produto-card', 322, 9999, false );
+
+	// Full-bleed hero backgrounds (Home hero, Fale Conosco hero) — these
+	// are each page's real, measured LCP element (rosa_branca_preload_lcp_image(),
+	// functions.php). Loading the untouched original here (1672px+ wide,
+	// several hundred KB even as AVIF) instead of a display-appropriate
+	// size was a measured, real LCP regression (Lighthouse: Home's LCP
+	// went from a passing time to 3.25s, over the 2.5s budget — see
+	// CLAUDE.md's "Performance measurement" note). 1920px covers every real
+	// desktop width already handled elsewhere in this theme
+	// (build-images.mjs's own static pipeline caps at the same 1920px
+	// for full-bleed backgrounds) — proportional (no hard crop), same
+	// reasoning as receita-card/produto-card above.
+	add_image_size( 'hero-bleed', 1920, 9999, false );
 }
 add_action( 'after_setup_theme', 'rosa_branca_register_image_sizes' );

@@ -122,15 +122,31 @@ function rosa_branca_picture( string $name, array $args = array() ): void {
 /**
  * Same <picture> (AVIF -> WebP -> fallback) output as rosa_branca_picture()
  * above, but for a real media-library attachment (e.g. a `receita`/`produto`
- * Featured Image) instead of a build-time static asset — reads the `sources`
- * metadata inc/uploads.php's wp_generate_attachment_metadata hook writes,
- * rather than assets/images/generated/manifest.json. Single resolution (no
- * 1x/2x srcset) for now, matching how far the static pipeline's own per-card
- * contexts are decided — add a second registered size (e.g. a `-2x` variant
- * of receita-card/produto-card in inc/post-types.php) if/when real content
- * makes that worth it.
+ * Featured Image, or a hero background) instead of a build-time static
+ * asset — reads the `sources` metadata inc/uploads.php's wp_generate_
+ * attachment_metadata hook writes, rather than assets/images/generated/
+ * manifest.json.
  *
- * $args: same keys as rosa_branca_picture() (alt/class/img_class/loading/fetchpriority).
+ * Builds a full responsive srcset (per format) from every real intermediate
+ * size WordPress generated for this attachment, same shape as
+ * rosa_branca_picture()'s static-pipeline srcset — NOT single-resolution:
+ * a real Lighthouse regression on Home's hero (LCP 3.25s, over the 2.5s
+ * budget — CLAUDE.md's "Performance measurement" note) was traced to this function always emitting
+ * one fixed-size image regardless of viewport, forcing mobile to download
+ * the same file as desktop. WP's own 'thumbnail' size is excluded — it's
+ * the one default size that's hard-cropped square (crop=true), not
+ * proportional like every other size here, so its file isn't a smaller
+ * version of the same framing and can't share one width-keyed srcset.
+ *
+ * $size still selects the single fallback candidate for browsers with no
+ * srcset support (via wp_get_attachment_image_src(), also where width/height
+ * come from) — pass the size whose max width best matches this image's
+ * largest real display context (e.g. 'hero-bleed' for a full-bleed hero).
+ *
+ * $args: same keys as rosa_branca_picture() (alt/class/img_class/loading/
+ * fetchpriority), plus:
+ * - sizes (string) the <img>/<source> `sizes` attribute, default '100vw'
+ *   (correct for a full-bleed hero; pass a real value for anything narrower).
  */
 function rosa_branca_dynamic_picture( int $attachment_id, string $size, array $args = array() ): void {
 	$image_src = wp_get_attachment_image_src( $attachment_id, $size );
@@ -148,36 +164,67 @@ function rosa_branca_dynamic_picture( int $attachment_id, string $size, array $a
 			'img_class'     => '',
 			'loading'       => 'lazy',
 			'fetchpriority' => '',
+			'sizes'         => '100vw',
 		)
 	);
 
-	$sources = ( 'full' === $size || empty( $metadata['sizes'][ $size ]['sources'] ) )
-		? ( $metadata['sources'] ?? array() )
-		: $metadata['sizes'][ $size ]['sources'];
+	$upload_dir = wp_get_upload_dir();
+	$base_url   = trailingslashit( $upload_dir['baseurl'] ) . trailingslashit( dirname( $metadata['file'] ) );
 
-	if ( ! empty( $sources ) ) {
-		$upload_dir = wp_get_upload_dir();
-		$base_url   = trailingslashit( $upload_dir['baseurl'] ) . trailingslashit( dirname( $metadata['file'] ) );
-
-		printf( '<picture%s>', $args['class'] ? ' class="' . esc_attr( $args['class'] ) . '"' : '' );
-
-		foreach ( array( 'image/avif', 'image/webp' ) as $mime ) {
-			if ( empty( $sources[ $mime ] ) ) {
-				continue;
-			}
-			printf(
-				'<source type="%s" srcset="%s">',
-				esc_attr( $mime ),
-				esc_url( $base_url . $sources[ $mime ]['file'] )
-			);
+	$candidates = array(
+		array(
+			'width'   => (int) $metadata['width'],
+			'file'    => basename( $metadata['file'] ),
+			'sources' => $metadata['sources'] ?? array(),
+		),
+	);
+	foreach ( (array) ( $metadata['sizes'] ?? array() ) as $size_name => $size_data ) {
+		if ( 'thumbnail' === $size_name || empty( $size_data['width'] ) || empty( $size_data['file'] ) ) {
+			continue;
 		}
-	} else {
-		printf( '<picture%s>', $args['class'] ? ' class="' . esc_attr( $args['class'] ) . '"' : '' );
+		$candidates[] = array(
+			'width'   => (int) $size_data['width'],
+			'file'    => $size_data['file'],
+			'sources' => $size_data['sources'] ?? array(),
+		);
+	}
+	usort( $candidates, static fn( array $a, array $b ): int => $a['width'] <=> $b['width'] );
+
+	$avif_items     = array();
+	$webp_items     = array();
+	$fallback_items = array();
+	foreach ( $candidates as $candidate ) {
+		if ( ! empty( $candidate['sources']['image/avif']['file'] ) ) {
+			$avif_items[] = array( 'file' => $candidate['sources']['image/avif']['file'], 'width' => $candidate['width'] );
+		}
+		if ( ! empty( $candidate['sources']['image/webp']['file'] ) ) {
+			$webp_items[] = array( 'file' => $candidate['sources']['image/webp']['file'], 'width' => $candidate['width'] );
+		}
+		$fallback_items[] = array( 'file' => $candidate['file'], 'width' => $candidate['width'] );
+	}
+
+	printf( '<picture%s>', $args['class'] ? ' class="' . esc_attr( $args['class'] ) . '"' : '' );
+
+	foreach ( array(
+		'image/avif' => $avif_items,
+		'image/webp' => $webp_items,
+	) as $mime => $items ) {
+		if ( empty( $items ) ) {
+			continue;
+		}
+		printf(
+			'<source type="%s" srcset="%s" sizes="%s">',
+			esc_attr( $mime ),
+			rosa_branca_image_srcset( $items, $base_url ),
+			esc_attr( $args['sizes'] )
+		);
 	}
 
 	printf(
-		'<img src="%s" width="%d" height="%d" alt="%s" loading="%s"%s%s>',
+		'<img src="%s" srcset="%s" sizes="%s" width="%d" height="%d" alt="%s" loading="%s"%s%s>',
 		esc_url( $image_src[0] ),
+		rosa_branca_image_srcset( $fallback_items, $base_url ),
+		esc_attr( $args['sizes'] ),
 		(int) $image_src[1],
 		(int) $image_src[2],
 		esc_attr( $args['alt'] ),

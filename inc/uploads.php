@@ -36,6 +36,14 @@ function rosa_branca_save_modern_format( string $abs_path, string $mime ): ?arra
 		return null;
 	}
 
+	// Same tuned values as scripts/build-images.mjs's AVIF_QUALITY/WEBP_QUALITY
+	// constants (55/75) — without this, Imagick/GD's own default quality is
+	// meaningfully higher/larger (measured ~2x bigger AVIF output for the
+	// same image), which is what caused the Lighthouse LCP regression this
+	// fixes together with the new 'hero-bleed' size (inc/post-types.php).
+	$quality = ( 'image/avif' === $mime ) ? 55 : 75;
+	$editor->set_quality( $quality );
+
 	$ext  = ( 'image/avif' === $mime ) ? 'avif' : 'webp';
 	$dest = preg_replace( '/\.[^.]+$/', '.' . $ext, $abs_path );
 	$saved = $editor->save( $dest, $mime );

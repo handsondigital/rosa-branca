@@ -25,7 +25,7 @@ $rosa_branca_fc_photo_id = $rosa_branca_fc_page ? (int) get_post_meta( $rosa_bra
 		<?php
 		rosa_branca_dynamic_picture(
 			$rosa_branca_fc_photo_id,
-			'full',
+			'hero-bleed',
 			array(
 				'img_class'     => 'page-hero__image hero-shell__image',
 				'alt'           => __( 'Trigo e farinha Rosa Branca', 'rosa-branca' ),
