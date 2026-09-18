@@ -19,3 +19,4 @@ define( 'ABSPATH', dirname( __DIR__ ) . '/' );
 // register real WordPress hooks at include time and would need those
 // functions stubbed before the file itself can even load.
 require_once dirname( __DIR__ ) . '/inc/content-fields.php';
+require_once dirname( __DIR__ ) . '/inc/nav-menu.php';

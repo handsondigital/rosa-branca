@@ -9,17 +9,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-// Only Home and Fale Conosco exist in the current implementation scope
-// (PAGES_PLAN.md §2); the rest are real nav targets for future pages, kept
-// as plain links with no "current" state until those pages are built.
-$rosa_branca_nav_items = array(
-	array( 'label' => __( 'Home', 'rosa-branca' ), 'url' => home_url( '/' ), 'current' => is_front_page() ),
-	array( 'label' => __( 'Sobre a Marca', 'rosa-branca' ), 'url' => home_url( '/sobre-a-marca/' ), 'current' => false ),
-	array( 'label' => __( 'Produtos', 'rosa-branca' ), 'url' => home_url( '/produtos/' ), 'current' => false ),
-	array( 'label' => __( 'Receitas', 'rosa-branca' ), 'url' => home_url( '/receitas/' ), 'current' => false ),
-	array( 'label' => __( 'Onde Comprar', 'rosa-branca' ), 'url' => home_url( '/onde-comprar/' ), 'current' => false ),
-	array( 'label' => __( 'Fale Conosco', 'rosa-branca' ), 'url' => home_url( '/fale-conosco/' ), 'current' => is_page( 'fale-conosco' ) ),
-);
+// Real menu (Aparência → Menus, location "primary") if an editor has
+// assigned one, else today's exact hardcoded 6 items — see
+// rosa_branca_get_nav_items() (inc/nav-menu.php, CONTENT_MODEL.md).
+$rosa_branca_nav_items = rosa_branca_get_nav_items( 'primary', rosa_branca_current_url() );
 ?>
 <header class="site-header">
 	<div class="main-menu">

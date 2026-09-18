@@ -21,6 +21,8 @@ require get_theme_file_path( 'inc/uploads.php' );
 require get_theme_file_path( 'inc/admin-fields-ui.php' );
 require get_theme_file_path( 'inc/home-fields.php' );
 require get_theme_file_path( 'inc/fale-conosco-fields.php' );
+require get_theme_file_path( 'inc/nav-menu.php' );
+require get_theme_file_path( 'inc/footer-fields.php' );
 require get_theme_file_path( 'inc/cli-seed.php' );
 
 // NOTE: o formulário de Fale Conosco está implementado apenas no front-end

@@ -52,8 +52,51 @@ class Rosa_Branca_Seed_CLI {
 		$this->seed_home_page();
 		$this->seed_receitas();
 		$this->seed_produtos();
+		$this->seed_nav_menu( 'primary', __( 'Menu Principal', 'rosa-branca' ) );
+		$this->seed_nav_menu( 'footer', __( 'Menu Rodapé', 'rosa-branca' ) );
 
 		WP_CLI::success( 'Seed completo.' );
+	}
+
+	/**
+	 * Creates a real WP menu with today's default items and assigns it to
+	 * $location, if that location has no menu assigned yet — CONTENT_MODEL.md
+	 * "Menu Principal / Menu Rodapé". Safe to re-run: does nothing once a
+	 * menu is assigned, even an empty one an editor is still building.
+	 */
+	private function seed_nav_menu( string $location, string $menu_name ): void {
+		$locations = get_nav_menu_locations();
+		if ( ! empty( $locations[ $location ] ) ) {
+			WP_CLI::log( "Já existe um menu atribuído para \"{$location}\" — pulando." );
+			return;
+		}
+
+		$existing = wp_get_nav_menu_object( $menu_name );
+		$menu_id  = $existing ? $existing->term_id : wp_create_nav_menu( $menu_name );
+
+		if ( is_wp_error( $menu_id ) ) {
+			WP_CLI::warning( "Falha ao criar o menu \"{$menu_name}\": " . $menu_id->get_error_message() );
+			return;
+		}
+
+		if ( empty( wp_get_nav_menu_items( $menu_id ) ) ) {
+			foreach ( rosa_branca_default_nav_items() as $item ) {
+				wp_update_nav_menu_item(
+					$menu_id,
+					0,
+					array(
+						'menu-item-title'  => $item['label'],
+						'menu-item-url'    => $item['url'],
+						'menu-item-status' => 'publish',
+					)
+				);
+			}
+		}
+
+		$locations[ $location ] = $menu_id;
+		set_theme_mod( 'nav_menu_locations', $locations );
+
+		WP_CLI::log( "Menu \"{$menu_name}\" criado e atribuído a \"{$location}\"." );
 	}
 
 	private function seed_home_page(): void {
