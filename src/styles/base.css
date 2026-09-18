@@ -21,27 +21,6 @@ html {
   }
 }
 
-/* Cross-document View Transitions: native browser cross-fade between full
-   page navigations (Home <-> Fale Conosco, and any future page) — CSS-only,
-   no JS, no added weight. Where a browser doesn't support this rule, it's
-   simply ignored and navigation works exactly as before (progressive
-   enhancement, same shape as this theme's other motion). */
-@view-transition {
-  navigation: auto;
-}
-
-/* Same reduced-motion gating as scroll-behavior above — this disables the
-   animation itself (navigation still happens, just as an instant swap)
-   rather than trying to make @view-transition itself conditional, which
-   isn't reliably supported inside a media query. */
-@media (prefers-reduced-motion: reduce) {
-  ::view-transition-group(*),
-  ::view-transition-old(*),
-  ::view-transition-new(*) {
-    animation: none !important;
-  }
-}
-
 html,
 body {
   max-width: 100%;
