@@ -52,6 +52,7 @@ class Rosa_Branca_Seed_CLI {
 		$this->seed_home_page();
 		$this->seed_receitas();
 		$this->seed_produtos();
+		$this->seed_banners();
 		$this->seed_nav_menu( 'primary', __( 'Menu Principal', 'rosa-branca' ) );
 		$this->seed_nav_menu( 'footer', __( 'Menu Rodapé', 'rosa-branca' ) );
 
@@ -192,14 +193,31 @@ class Rosa_Branca_Seed_CLI {
 
 	/**
 	 * Imports a theme asset image into the media library and sets it as
-	 * $post_id's Featured Image — importing (not just referencing the
-	 * static file) is what triggers inc/uploads.php's AVIF/WebP pipeline
-	 * for it, same as any other real upload.
+	 * $post_id's Featured Image — thin wrapper around import_sample_image()
+	 * for the receita/produto case specifically (a banner slide's image
+	 * isn't a post thumbnail, so it uses the shared import step directly —
+	 * see seed_banners() below).
 	 */
 	private function attach_sample_image( int $post_id, string $source_path, string $title ): void {
+		$attachment_id = $this->import_sample_image( $source_path, $title, $post_id );
+		if ( $attachment_id ) {
+			set_post_thumbnail( $post_id, $attachment_id );
+		}
+	}
+
+	/**
+	 * Imports a theme asset image (assets/images/*, the same static files
+	 * build-images.mjs already optimizes at build time) into the media
+	 * library — copying it in as a real upload, not just referencing the
+	 * static file, is what triggers inc/uploads.php's wp_generate_
+	 * attachment_metadata hook, the SAME AVIF/WebP conversion pipeline any
+	 * real editor upload goes through. Returns the new attachment ID, or
+	 * null if the source file is missing or the import failed.
+	 */
+	private function import_sample_image( string $source_path, string $title, int $parent_post_id = 0 ): ?int {
 		if ( ! file_exists( $source_path ) ) {
 			WP_CLI::warning( "Imagem de exemplo não encontrada: {$source_path}" );
-			return;
+			return null;
 		}
 
 		$upload_dir = wp_upload_dir();
@@ -208,7 +226,7 @@ class Rosa_Branca_Seed_CLI {
 
 		if ( ! copy( $source_path, $dest_path ) ) {
 			WP_CLI::warning( "Falha ao copiar imagem de exemplo para {$dest_path}" );
-			return;
+			return null;
 		}
 
 		$attachment_id = wp_insert_attachment(
@@ -218,16 +236,63 @@ class Rosa_Branca_Seed_CLI {
 				'post_status'    => 'inherit',
 			),
 			$dest_path,
-			$post_id
+			$parent_post_id
 		);
 
 		if ( is_wp_error( $attachment_id ) ) {
 			WP_CLI::warning( "Falha ao registrar anexo para \"{$title}\": " . $attachment_id->get_error_message() );
-			return;
+			return null;
 		}
 
 		wp_update_attachment_metadata( $attachment_id, wp_generate_attachment_metadata( $attachment_id, $dest_path ) );
-		set_post_thumbnail( $post_id, $attachment_id );
+
+		return $attachment_id;
+	}
+
+	/**
+	 * Fills the Home page's Banner (Hero) repeater (inc/home-fields.php,
+	 * CONTENT_MODEL.md) with today's exact mock copy — same title/text/link
+	 * hero.php's own hardcoded fallback already uses — but with a REAL
+	 * imported image (banner-home.png, the theme's existing static hero
+	 * asset) instead of image_id 0, specifically so this exercises the
+	 * same AVIF/WebP pipeline the receita/produto seeding already does.
+	 * Goes through rosa_branca_sanitize_banner_slides() exactly like a
+	 * real wp-admin save would (update_post_meta() on a registered meta
+	 * key always runs its sanitize_callback), not a raw DB write.
+	 */
+	private function seed_banners(): void {
+		$home_id = rosa_branca_home_page_id();
+		if ( ! $home_id ) {
+			WP_CLI::warning( 'Página "Home" não encontrada — pulando banners.' );
+			return;
+		}
+
+		if ( ! empty( get_post_meta( $home_id, 'rosa_branca_banner_slides', true ) ) ) {
+			WP_CLI::log( 'Banners do Hero já configurados — pulando.' );
+			return;
+		}
+
+		$attachment_id = $this->import_sample_image(
+			get_theme_file_path( 'assets/images/banner-home.png' ),
+			'Banner Home',
+			$home_id
+		);
+
+		if ( ! $attachment_id ) {
+			WP_CLI::warning( 'Falha ao importar a imagem do banner — banners não configurados.' );
+			return;
+		}
+
+		$mock_slide = array(
+			'title'    => __( 'Lorem ipsum dolor sit amet', 'rosa-branca' ),
+			'text'     => __( 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse ut massa neque. Etiam egestas magna sit amet elit accumsan tristique in ut nunc.', 'rosa-branca' ),
+			'link'     => home_url( '/receitas/' ),
+			'image_id' => $attachment_id,
+		);
+
+		update_post_meta( $home_id, 'rosa_branca_banner_slides', array_fill( 0, 5, $mock_slide ) );
+
+		WP_CLI::log( '5 slide(s) do Banner (Hero) configurados com a imagem otimizada (ID ' . $attachment_id . ').' );
 	}
 }
 
