@@ -10,6 +10,17 @@ html {
   scroll-behavior: smooth;
 }
 
+/* Every other motion in this theme is already gated the same way
+   (header.css's menu-link underline/mobile-menu transitions,
+   scroll-reveal.js's own early-return) — this was the one unconditional
+   exception, real risk for vestibular-disorder users on the skip-link's
+   #main jump. */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
 html,
 body {
   max-width: 100%;
